@@ -1,0 +1,13 @@
+{
+    "world_sky": "Blue Skies",
+    "world_meadow": "Mead Meadows",
+    "world_pond": "Deep Waters",
+    "world_woods": "Woody Woods",
+    "world_street": "Busy Streets",
+    "mainMenu_continue": "Continue Run",
+    "mainMenu_campaign": "Campaign",
+    "mainMenu_endless": "Endless Mode",
+    "mainMenu_settings": "Settings",
+    "selectionScreen_startGame": "Start Journey",
+    "playScreen_winMessage": "You won!"
+}

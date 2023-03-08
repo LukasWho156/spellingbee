@@ -1,7 +1,7 @@
 import { THREE, Game, MouseInteractionSystem, MouseInteractionComponent, Sprite2D } from "luthe-amp"
 import ConnectionShader from "../../shaders/connection-shader.js";
 
-const makeTouchSystem = (screen, camera, boardSystem, evaluator, beehive, healthbar, messenger) => {
+const makeTouchSystem = (screen, camera, boardSystem, evaluator, beehive, messenger) => {
 
     const system = new MouseInteractionSystem(Game.width, Game.height, camera, Game.renderer.domElement);
     screen.addSystem(system)
@@ -96,6 +96,7 @@ const makeTouchSystem = (screen, camera, boardSystem, evaluator, beehive, health
         scaleX: 0.5,
         scaleY: 0.5,
     });
+    rerollButton.setFrame(1);
     beehive.add(rerollButton);
     const rerollInteraction = new MouseInteractionComponent({cursor: pointer}, rerollButton);
     rerollInteraction.addEventListener('dragstart', () => {
@@ -106,17 +107,9 @@ const makeTouchSystem = (screen, camera, boardSystem, evaluator, beehive, health
     });
     system.add(rerollInteraction);
 
-    const menuButton = new Sprite2D({
-        texture: Game.getTexture('menuButton'),
-        handle: 'top right',
-        x: 300,
-        y: -600,
-        z: 5,
-    });
-
-    healthbar.add(menuButton);
-
     boardSystem.addEventListener('selectionchanged', _updateChain);
+
+    return system;
 
 }
 

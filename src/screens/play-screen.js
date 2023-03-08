@@ -7,8 +7,11 @@ import makeTouchSystem from "../systems/play-screen/touch-system.js";
 import WordEval from "../systems/play-screen/word-eval.js";
 import BloodShader from "../shaders/blood-shader.js";
 import CombStatusSystem from "../systems/play-screen/comb-status-system.js";
+import SlideSystem from "../systems/util/slide-system.js";
+import pauseMenu from "../systems/util/pause-menu.js";
+import backgroundSystem from "../systems/util/background-system.js";
 
-const playScreen = (health, maxHealth, background) => {
+const playScreen = (health, maxHealth, background, gameOverScreen, slideIn) => {
 
     const screen = new GameScreen();
 
@@ -18,12 +21,9 @@ const playScreen = (health, maxHealth, background) => {
 
     screen.addRenderPass(mainScene, mainCamera);
 
-    const bgSprite = new Sprite2D({
-        texture: Game.getTexture('backgrounds'),
-        z: -50,
-    });
-    bgSprite.setFrame(background);
-    mainScene.add(bgSprite);
+    const bgSys = backgroundSystem(mainScene, background);
+    screen.addSystem(bgSys);
+    screen.backgroundSystem = bgSys
 
     const beehiveGroup = new THREE.Group();
     beehiveGroup.add(new Sprite2D({
@@ -36,7 +36,7 @@ const playScreen = (health, maxHealth, background) => {
     }));
 
     const healthbarGroup = new THREE.Group();
-    healthbarGroup.position.y = 350;
+    if(slideIn) healthbarGroup.position.y = 200;
     mainScene.add(healthbarGroup);
 
     const bloodPass = new ExtendedShaderPass(BloodShader);
@@ -82,29 +82,40 @@ const playScreen = (health, maxHealth, background) => {
 
     const evaluator = new WordEval(board, messenger);
 
-    makeTouchSystem(screen, mainCamera, board, evaluator, beehiveGroup, healthbarGroup, messenger);
+    const mis = makeTouchSystem(screen, mainCamera, board, evaluator, beehiveGroup, messenger);
 
+    pauseMenu(mainScene, healthbarGroup, mis, messenger, {
+        callback: () => healthSys.dealDamage(10000),
+    }).then(pm => screen.addSystem(pm));
+
+    const deathPlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(600, 1200),
+        new THREE.MeshBasicMaterial({
+            color: 0x000000,
+            opacity: 0,
+            transparent: true,
+        })
+    );
+    deathPlane.position.z = 300;
+    mainScene.add(deathPlane);
+    
     screen.addSystem({update: (delta) => {
-        if(beehiveGroup.position.y < 0) {
-            beehiveGroup.position.y += delta * 0.003 * 350;
-            if(beehiveGroup.position.y > 0) {
-                beehiveGroup.position.y = 0;
-            }
+        if(healthSys.health <= 0) {
+            if(!messenger.isPaused()) messenger.pause();
+            deathPlane.material.opacity += 0.001 * delta;
+            if(deathPlane.material.opacity >= 1) Game.setActiveScreen(gameOverScreen());
         }
-        if(healthbarGroup.position.y > 0) {
-            healthbarGroup.position.y -= delta * 0.003 * 350;
-            if(healthbarGroup.position.y < 0) {
-                healthbarGroup.position.y = 0;
-            }
-        }
-    }});
+    }})
 
-    screen.addListener('keydown', (event) => {
-        if(messenger.isPaused()) {
-            messenger.unpause();
-        } else {
-            messenger.pause();
-        }
+    const slideSystem = new SlideSystem();
+    screen.addSystem(slideSystem);
+    slideSystem.add(beehiveGroup, {
+        inY: 0,
+        outY: -350,
+    });
+    slideSystem.add(healthbarGroup, {
+        inY: 0,
+        outY: 200,
     })
 
     return screen;

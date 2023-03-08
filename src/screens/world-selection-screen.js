@@ -5,6 +5,8 @@ import WORLDS from "../worlds.js";
 import localize from "../language/localize.js";
 import campaignWorldScreen from "./campaign-world-screen.js";
 import SlideSystem from "../systems/util/slide-system.js";
+import { renderH2, renderWhiteText } from "../util/text-util.js";
+import backgroundSystem from "../systems/util/background-system.js";
 
 const worldSelectionScreen = () => {
 
@@ -17,38 +19,18 @@ const worldSelectionScreen = () => {
     const screen = new GameScreen();
     screen.addRenderPass(mainScene, mainCamera);
 
-    const bg1 = new Sprite2D({
-        texture: 'backgrounds',
-        z: -50,
-    });
-    bg1.setFrame(currentWorld.background);
-    mainScene.add(bg1);
-
-    const bg2 = new Sprite2D({
-        texture: 'backgrounds',
-        z: -45,
-    });
-    bg2.setFrame(currentWorld.background);
-    mainScene.add(bg2);
-
-    screen.addSystem({update: (delta) => {
-        if(bg2.material.opacity < 1) {
-            bg2.material.opacity += 0.003 * delta;
-            if(bg2.material.opacity >= 1) {
-                bg2.material.opacity = 1;
-            }
-        }
-    }});
+    const bgSys = backgroundSystem(mainScene, 0);
+    screen.addSystem(bgSys);
 
     const slideSystem = new SlideSystem();
     screen.addSystem(slideSystem);
     
     const topGroup = new THREE.Group();
-    topGroup.position.y = 200;
+    topGroup.position.y = 300;
     mainScene.add(topGroup);
     slideSystem.add(topGroup, {
         inY: 0,
-        outY: 200,
+        outY: 300,
     });
 
     const bottomGroup = new THREE.Group();
@@ -66,25 +48,45 @@ const worldSelectionScreen = () => {
     });
     topGroup.add(titleCard);
 
-    const titleText = new Text();
-    titleText.font = Game.font;
-    titleText.fontSize = 68;
-    titleText.anchorX = 'center';
+    const titleText = renderH2(currentWorld.titleKey);
     titleText.anchorY = 'middle';
-    titleText.color = 0x000000;
-    titleText.text = localize(currentWorld.titleKey, Game.uiLanguage);
     titleText.sync();
     titleText.position.y = 550;
     titleText.position.z = 10;
     topGroup.add(titleText);
 
+    const difficultyText = renderWhiteText('selectionScreen_difficulty');
+    difficultyText.sync();
+    difficultyText.position.set(0, 430, 10);
+    topGroup.add(difficultyText);
+
+    const difficultyGroup = new THREE.Group();
+    difficultyGroup.position.set(0, 390, 5);
+    topGroup.add(difficultyGroup);
+
+    const createDifficultyRating = () => {
+        while(difficultyGroup.children.length > 0) {
+            difficultyGroup.remove(difficultyGroup.children[0]);
+        }
+        for(let i = 0; i < currentWorld.difficulty; i++) {
+            const x = i * 40 - (currentWorld.difficulty - 1) * 20;
+            const star = new Sprite2D({
+                texture: 'difficulty',
+                x: x,
+                scaleX: 0.25,
+                scaleY: 0.25,
+            });
+            difficultyGroup.add(star);
+        }
+    }
+
     const setWorld = () => {
-        bg1.setFrame(currentWorld.background);
         currentWorld = WORLDS[currentWorldIndex];
-        bg2.material.opacity = 0;
-        bg2.setFrame(currentWorld.background);
+        bgSys.setBackground(currentWorld.background, true);
+        setTimeout(() => Game.mainMenu.setFromBackground(currentWorld.background), 10);
         titleText.text = localize(currentWorld.titleKey, Game.settings.uiLanguage);
         titleText.sync();
+        createDifficultyRating();
     }
 
     const nextWorld = () => {
@@ -107,7 +109,7 @@ const worldSelectionScreen = () => {
     bottomGroup.add(startButton.sprite);
     startButton.addToSystem(mis);
     startButton.addEventListener('click', () => {
-        slideSystem.triggerSlideout(() => Game.setActiveScreen(campaignWorldScreen(currentWorld)));
+        slideSystem.triggerSlideout(() => Game.setActiveScreen(campaignWorldScreen(currentWorldIndex, currentWorld.background)));
     });
 
     const nextButton = CombButton(1);
@@ -134,10 +136,10 @@ const worldSelectionScreen = () => {
         slideSystem.triggerSlideout(() => Game.setActiveScreen(Game.mainMenu));
     });
 
-    screen.addSystem({mount: () => {
+    screen.addSystem({mount:  () => {
+        bgSys.setBackground(0);
         setWorld();
-        bg1.setFrame(0);
-    }})
+    }});
 
     screen.addSystem({update: () =>  {
         prevButton.sprite.visible = !(currentWorldIndex === 0);

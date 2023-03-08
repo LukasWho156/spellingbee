@@ -8,6 +8,9 @@ import StagBeetle from "../monsters/stag-beetle.js";
 import endlessPlayScreen from "./endless-play-screen.js";
 import worldSelectionScreen from "./world-selection-screen.js";
 import SlideSystem from "../systems/util/slide-system.js";
+import createPopup from "../util/popup.js";
+import backgroundSystem from "../systems/util/background-system.js";
+import campaignWorldScreen from "./campaign-world-screen.js";
 
 const mainMenuScreen = () => {
 
@@ -17,11 +20,8 @@ const mainMenuScreen = () => {
     const screen = new GameScreen();
     screen.addRenderPass(mainScene, mainCamera);
 
-    const bg1 = new Sprite2D({
-        texture: 'backgrounds',
-        z: -50,
-    });
-    mainScene.add(bg1);
+    const bgSys = backgroundSystem(mainScene, 0);
+    screen.addSystem(bgSys);
 
     const campaignScreen = worldSelectionScreen();
 
@@ -47,6 +47,14 @@ const mainMenuScreen = () => {
         slideSystem.triggerSlideout(() => Game.setActiveScreen(campaignScreen));
     });
 
+    const continueButton = TextButton(localize('mainMenu_continue', Game.settings.uiLanguage));
+    continueButton.sprite.position.y = -200;
+    bottomGroup.add(continueButton.sprite);
+    continueButton.addToSystem(mis);
+    continueButton.addEventListener('click', () => {
+        slideSystem.triggerSlideout(() => Game.setActiveScreen(campaignWorldScreen(Game.saveData.currentRun.world, 0, Game.saveData.currentRun)));
+    });
+
     const endlessButton = TextButton(localize('mainMenu_endless', Game.settings.uiLanguage));
     endlessButton.sprite.position.y = -350;
     bottomGroup.add(endlessButton.sprite);
@@ -62,6 +70,21 @@ const mainMenuScreen = () => {
     settingsButton.addEventListener('click', () => {
         // TODO
     });
+
+    screen.setFromBackground = (bg) => {
+        bgSys.setBackground(bg);
+        bgSys.setBackground(0);
+    }
+
+    screen.addSystem({mount: () => {
+        if(!Game.saveData.currentRun) {
+            campaignButton.sprite.scale.set(1, 1, 1);
+            continueButton.sprite.scale.set(0, 0, 1);
+        } else {
+            campaignButton.sprite.scale.set(0, 0, 1);
+            continueButton.sprite.scale.set(1, 1, 1);
+        }
+    }})
 
     return screen;
 

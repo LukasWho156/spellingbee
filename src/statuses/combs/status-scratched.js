@@ -1,4 +1,4 @@
-import { Game, Sprite2D } from "luthe-amp";
+import { Sprite2D } from "luthe-amp";
 
 const StatusScratched = {
     apply: (comb, sprite) => {
@@ -16,9 +16,10 @@ class Scratched {
         this._comb = comb;
         this._combSprite = combSprite;
         this._scratchSprite = new Sprite2D({
-            texture: Game.getTexture('statusScratched'),
+            texture: 'combIcons',
             z: 2,
-        })
+        });
+        this._scratchSprite.setFrame(8);
     }
 
     onApply = () => {

@@ -1,8 +1,26 @@
 {
-    "mainMenu_continue": "Run Fortsetzen",
+    "yes": "Ja",
+    "no": "Nein",
+    "mainMenu_continue": "Reise Fortsetzen",
     "mainMenu_campaign": "Kampagne",
     "mainMenu_endless": "Endlos-Modus",
     "mainMenu_settings": "Einstellungen",
+    "selectionScreen_difficulty": "Schwierigkeitsgrad:",
     "selectionScreen_startGame": "Reise Beginnen",
-    "playScreen_winMessage": "Gewonnen!"
+    "playScreen_winMessage": "Gewonnen!",
+    "flower_heading": "Blumenbeet",
+    "flower_description": "Im Blumenbeet findest du {0}. Du kannst den Nektar sammeln, um deinen Honigvorrat um {1} zu erhöhen. Nimmst du stattdessen ein Blütenblatt, {2}.",
+    "flower_buttonNectar": "Nektar Sammeln",
+    "flower_buttonPetal": "Blüte Nehmen",
+    "gameOver_heading": "Spielende",
+    "gameOver_score": "Du hast {0} Gegner besiegt.",
+    "gameOver_record": "Das ist eine neue persönliche Bestleistung!",
+    "gameOver_highscore": "Persönliche Bestleistung: {0}",
+    "gameOver_encouragement": "Man kann nicht immer gewinnen.",
+    "pauseMenu_heading": "Spiel Pausiert",
+    "pauseMenu_resume": "Spiel Fortsetzen",
+    "pauseMenu_abort": "Aufgeben",
+    "pauseMenu_mainMenu": "Hauptmenü",
+    "abortConfirm_heading": "Aufgeben?",
+    "abortConfirm_description": "Wenn du bestätigst, verlierst du deinen momentanen Spielfortschritt."
 }

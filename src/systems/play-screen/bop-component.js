@@ -15,7 +15,10 @@ class BopComponent {
     update = (delta, globalTime) => {
         if(this._entity.health <= 0) return;
         const value = Math.sin((globalTime * this._entity.bopFrequency + this._entity.bopOffset) * Math.PI * 2);
-        this._sprite.setScale(this._entity.size * (1 + value * this._entity.bopX), this._entity.size * (1 - value * this._entity.bopY));
+        this._sprite.setScale(
+            this._entity.size * (this._entity.fullScale ?? 1) * (1 + value * this._entity.bopX),
+            this._entity.size * (this._entity.fullScale ?? 1) * (1 - value * this._entity.bopY)
+        );
     }
 
 }

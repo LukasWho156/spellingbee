@@ -78,6 +78,7 @@ class HealthSystem {
         const value = this._health / this._maxHealth;
         this._healthbar.setValue(value);
         this._healthText.text = `${this._health} / ${this._maxHealth}`;
+        this._healthText.sync();
     }
 
 }

@@ -41,6 +41,7 @@ class MonsterSystem {
         this._messenger = messenger;
         this._messenger.dealDamageToMonster = (damage) => this.dealDamage(damage);
         this._messenger.getCurrentMonster = () => this._currentMonster;
+        this._messenger.healMonster = (amount) => this.heal(amount);
     }
 
     mount = () => {
@@ -87,9 +88,9 @@ class MonsterSystem {
     spawnMonster = (monster) => {
         const sprite = new Sprite2D({
             texture: Game.getTexture(monster.texture),
-            handle: 'bottom',
+            handle: monster.flying ? 'center' : 'bottom',
             x: -67,
-            y: -125,
+            y: monster.flying ? -300 : -125,
             scaleX: 0,
             scaleY: 0,
         });
@@ -135,6 +136,16 @@ class MonsterSystem {
         if(this._currentMonster.health <= 0) {
             this._die();
         }
+    }
+
+    heal = (amount) => {
+        if(!this._currentMonster) return;
+        this._currentMonster.health += amount;
+        if(this._currentMonster.health > this._currentMonster.maxHealth) {
+            this._currentMonster.health = this._currentMonster.maxHealth;
+        }
+        this._healthbar.setValue(this._currentMonster.health / this._currentMonster.maxHealth);
+        this._healthText.text = `${this._currentMonster.health} / ${this._currentMonster.maxHealth}`;
     }
 
     _die = () => {

@@ -4,15 +4,17 @@ class GrowthComponent {
 
     _entity;
     _sprite;
+    _growthRate;
 
-    constructor(entity, sprite) {
+    constructor(entity, sprite, growthRate) {
         this._entity = entity;
         this._sprite = sprite;
+        this._growthRate = growthRate ?? GROWTH_RATE;
     }
 
     update = (delta) => {
         if(this._entity.state === 'growing') {
-            this._entity.size += delta * GROWTH_RATE;
+            this._entity.size += delta * this._growthRate;
             if(this._entity.size >= 1) {
                 this._entity.size = 1;
                 this._entity.state = 'ready';

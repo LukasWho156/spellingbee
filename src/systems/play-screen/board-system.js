@@ -203,7 +203,8 @@ class BoardSystem extends EventTarget {
             this._buffProbablility += this._buffIncrease;
         }
         if(entity.letter === '*') {
-            const text = new Sprite2D({texture: 'joker'});
+            const text = new Sprite2D({texture: 'combIcons'});
+            text.setFrame(2);
             text.scale.set(0.9, 0.9, 1);
             text.position.y = 0.02;
             text.position.z = 5;

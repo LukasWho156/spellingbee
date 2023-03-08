@@ -29,6 +29,7 @@ const ATTACKS = {
 
 const DungBeetle = {
     texture: 'dungBeetle',
+    background: 2,
     health: 750,
     nextAttack: (i, history) => {
         if(i === 0) {

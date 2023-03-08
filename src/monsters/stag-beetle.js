@@ -23,6 +23,7 @@ const ATTACKS = {
 
 const StagBeetle = {
     texture: 'stagBeetle',
+    background: 2,
     health: 750,
     nextAttack: (i, history) => {
         if (i == 0) {

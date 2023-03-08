@@ -16,9 +16,10 @@ class Webbed {
         this._comb = comb;
         this._combSprite = combSprite;
         this._webSprite = new Sprite2D({
-            texture: Game.getTexture('statusWebbed'),
+            texture: 'combIcons',
             z: 2,
-        })
+        });
+        this._webSprite.setFrame(9);
     }
 
     onApply = () => {

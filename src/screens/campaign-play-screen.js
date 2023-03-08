@@ -4,6 +4,8 @@ import localize from "../language/localize.js";
 import PulseComponent from "../systems/util/pulse-component.js";
 import GrowthComponent from "../systems/play-screen/growth-component.js";
 import playScreen from "./play-screen.js";
+import { renderH1 } from "../util/text-util.js";
+import campaignGameOverScreen from "./campaign-game-over-screen.js";
 
 const CONFETTI_COLORS = [
     //0xcf3f3f,
@@ -17,20 +19,14 @@ const CONFETTI_COLORS = [
 
 const campaignPlayScreen = (player, monster, background, parent) => {
 
-    const screen = playScreen(player.health, 500, background);
+    const screen = playScreen(player.health, 500, background, () => {
+        Game.saveData.currentRun = null;
+        Game.saveToStorage('bee_saveData', Game.saveData);
+        return campaignGameOverScreen();
+    });
 
-    const winText = new Text();
-    winText.position.z = 100;
-    winText.text = localize('playScreen_winMessage', Game.settings.uiLanguage);
+    const winText = renderH1('playScreen_winMessage');
     winText.scale.set(0, 0, 1);
-    winText.font = Game.headerFont;
-    winText.color = 0x000000;
-    winText.fontSize = 100;
-    winText.anchorX = 'center';
-    winText.anchorY = 'middle';
-    winText.outlineWidth = '10%';
-    winText.outlineBlur = '10%';
-    winText.outlineColor = 0xffaf3f;
     winText.sync();
     screen.mainScene.add(winText);
 
@@ -56,7 +52,7 @@ const campaignPlayScreen = (player, monster, background, parent) => {
     screen.mainScene.add(backdrop)
 
     screen.addSystem({mount: () => {
-        screen.monsterSystem.spawnMonster({...monster, health: 50});
+        screen.monsterSystem.spawnMonster(monster);
     }, update: (delta, globalTime) => {
         if(screen.monsterSystem.isAlive) {
             return;

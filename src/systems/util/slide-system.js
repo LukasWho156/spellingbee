@@ -5,13 +5,19 @@ class SlideSystem {
     _components;
     _callback;
     _state;
+    _slideSpeed
 
-    constructor() {
+    get ready() {
+        return this._state === 'ready';
+    }
+
+    constructor(slideSpeed) {
         this._components = [];
+        this._slideSpeed = slideSpeed ?? SLIDE_SPEED;
     }
 
     add(object3d, entity) {
-        this._components.push(new SlideComponent(object3d, entity));
+        this._components.push(new SlideComponent(object3d, entity, this._slideSpeed));
     }
 
     triggerSlideout = (callback) => {
@@ -60,18 +66,21 @@ class SlideComponent {
     _inY;
     _slide;
 
-    constructor(object3d, entity) {
+    _slideSpeed
+
+    constructor(object3d, entity, slideSpeed) {
         this._object3d = object3d;
         this._entity = entity;
-        this._inY = entity.inY;
-        this._outY = entity.outY;
+        this._inY = entity.inY ?? object3d.position.y;
+        this._outY = entity.outY ?? object3d.position.y;
         this._slide = this._inY - this._outY;
+        this._slideSpeed = slideSpeed;
     }
 
     slideIn = (delta) => {
         const diff = this._inY - this._object3d.position.y;
         if(diff * this._slide > 0) {
-            this._object3d.position.y += this._slide * delta * SLIDE_SPEED;
+            this._object3d.position.y += this._slide * delta * this._slideSpeed;
         }
         const newDiff = this._inY - this._object3d.position.y
         if(newDiff * this._slide <= 0) {
@@ -82,9 +91,10 @@ class SlideComponent {
     }
 
     slideOut = (delta) => {
+        if(this._entity.ignoreSlideOut) return false;
         const diff = this._outY - this._object3d.position.y;
         if(diff * this._slide < 0) {
-            this._object3d.position.y -= this._slide * delta * SLIDE_SPEED;
+            this._object3d.position.y -= this._slide * delta * this._slideSpeed;
         }
         const newDiff = this._outY - this._object3d.position.y
         if(newDiff * this._slide >= 0) {

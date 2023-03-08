@@ -26,6 +26,7 @@ const ATTACKS = {
 
 const Spider = {
     texture: 'spider',
+    background: 1,
     health: 750,
     nextAttack: (i, history) => {
         if(i === 0) {

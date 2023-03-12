@@ -1,4 +1,5 @@
 import { Game } from "luthe-amp";
+
 import playScreen from "./play-screen.js";
 import endlessGameOverScreen from "./endless-game-over-screen.js";
 
@@ -6,7 +7,7 @@ const endlessPlayScreen = (unlockedMonsters) => {
 
     let defeatedMonsters = 0;
 
-    const screen = playScreen(500, 500, 0, () => endlessGameOverScreen(defeatedMonsters));
+    const screen = playScreen(500, 500, [], 0, () => endlessGameOverScreen(defeatedMonsters));
 
     let attackSpeed = 1;
 

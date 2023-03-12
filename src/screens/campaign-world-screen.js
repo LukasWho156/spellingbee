@@ -1,4 +1,9 @@
-import { Game, createOrthoCam, GameScreen, Sprite2D, THREE, SimpleSystem, MouseInteractionSystem, MouseInteractionComponent } from "luthe-amp";
+import { Game, GameScreen, THREE, SimpleSystem } from "luthe-amp";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+import { createOrthoCam } from "luthe-amp/lib/util/create-ortho-cam";
+import { MouseInteractionSystem } from "luthe-amp/lib/input/mouse-interaction-system";
+import { MouseInteractionComponent } from "luthe-amp/lib/input/mouse-interaction-component";
+
 import ShrinkComponent from "../systems/util/shrink-component.js";
 import GrowthComponent from '../systems/play-screen/growth-component.js';
 import HealthSystem from "../systems/play-screen/health-system.js";
@@ -9,6 +14,9 @@ import backgroundSystem from "../systems/util/background-system.js";
 import WORLDS from "../worlds.js";
 import BopComponent from "../systems/play-screen/bop-component.js";
 import campaignFlowerScreen from "./campaign-flower-screen.js";
+import FLOWERS from "../flowers/flowers.js";
+import FlowerSystem from "../systems/play-screen/flower-system.js";
+import drawFromArray from "../util/draw-from-array.js";
 
 const SCALE = 0.5;
 
@@ -25,24 +33,31 @@ const PATH = [
     { decoration: 6 },
 ]
 
+const COMPATIBLE_VERSION = 2;
+
 const campaignWorldScreen = (worldIndex, fromBackground, player) => {
 
     const screen = new GameScreen();
 
     const world = WORLDS[worldIndex];
 
+    if(player?.compatibility !== COMPATIBLE_VERSION) player = null;
+
     player ??= {
         world: worldIndex,
         progress: 0,
         health: 500,
         buffRate: 0.01,
+        flowers: [],
+        order: drawFromArray(FLOWERS, 4).map(flower => flower.id),
+        compatibility: COMPATIBLE_VERSION,
     };
 
     const createSubScreen = (i) => {
         if(i % 2 === 0) {
             return campaignPlayScreen(player, world.monsters[i / 2], world.background, screen);
         } else {
-            return campaignFlowerScreen(player, screen);
+            return campaignFlowerScreen(player, player.order[(i - 1) / 2], screen);
         }
     }
 
@@ -165,6 +180,9 @@ const campaignWorldScreen = (worldIndex, fromBackground, player) => {
     const healthSystem = new HealthSystem(topGroup, player.health, 500);
     screen.addSystem(healthSystem);
 
+    const flowerGroup = new THREE.Group();
+    topGroup.add(flowerGroup);
+
     screen.addSystem({mount: () => {
         Game.saveData.currentRun = player;
         Game.saveToStorage('bee_saveData', Game.saveData);
@@ -187,6 +205,12 @@ const campaignWorldScreen = (worldIndex, fromBackground, player) => {
         })
         highlight.position.copy(positions[player.progress + 1]);
         highlight.position.z = 5;
+
+        while(flowerGroup.children.length > 0) {
+            flowerGroup.remove(flowerGroup.children[0]);
+        }
+        const flowers = player.flowers.map(id => FLOWERS.find(f => f.id === id));
+        screen.addSystem(FlowerSystem(mainScene, topGroup, flowers, mis));
     }, update: () => {
         if(combs.find(comb => comb.state !== 'gone')) {
             return;

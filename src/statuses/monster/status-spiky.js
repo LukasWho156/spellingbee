@@ -1,4 +1,5 @@
 const StatusSpiky = {
+    id: 'spiky',
     color: 0xafafaf,
     intent: 4,
     apply: () => {
@@ -8,8 +9,18 @@ const StatusSpiky = {
 
 class Spiky {
 
+    _stacks = 0;
+
+    addStacks = (stacks) => {
+        this._stacks += stacks;
+    }
+
+    getStacks = () => {
+        return this._stacks;
+    }
+
     onAttacked = (messenger) => {
-        messenger.dealDamageToPlayer(2);
+        messenger.dealDamageToPlayer(this._stacks, true);
     }
 
 }

@@ -1,4 +1,8 @@
-import { THREE, Game, GameScreen, createOrthoCam, ParticleSystem, Sprite2D, ExtendedShaderPass } from "luthe-amp"
+import { THREE, Game, GameScreen } from "luthe-amp"
+import { createOrthoCam } from "luthe-amp/lib/util/create-ortho-cam";
+import { ParticleSystem } from "luthe-amp/lib/graphics/systems/particle-system";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+import { ExtendedShaderPass } from "luthe-amp/lib/post-processing/extended-shader-pass";
 
 import BoardSystem from "../systems/play-screen/board-system.js";
 import MonsterSystem from "../systems/play-screen/monster-system.js";
@@ -10,8 +14,9 @@ import CombStatusSystem from "../systems/play-screen/comb-status-system.js";
 import SlideSystem from "../systems/util/slide-system.js";
 import pauseMenu from "../systems/util/pause-menu.js";
 import backgroundSystem from "../systems/util/background-system.js";
+import FlowerSystem from "../systems/play-screen/flower-system.js";
 
-const playScreen = (health, maxHealth, background, gameOverScreen, slideIn) => {
+const playScreen = (health, maxHealth, flowers, background, gameOverScreen, slideIn) => {
 
     const screen = new GameScreen();
 
@@ -83,6 +88,8 @@ const playScreen = (health, maxHealth, background, gameOverScreen, slideIn) => {
     const evaluator = new WordEval(board, messenger);
 
     const mis = makeTouchSystem(screen, mainCamera, board, evaluator, beehiveGroup, messenger);
+
+    screen.addSystem(FlowerSystem(mainScene, healthbarGroup, flowers, mis, messenger));
 
     pauseMenu(mainScene, healthbarGroup, mis, messenger, {
         callback: () => healthSys.dealDamage(10000),

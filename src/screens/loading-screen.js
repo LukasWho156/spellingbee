@@ -1,4 +1,9 @@
-import { THREE, Game, MouseInteractionSystem, MouseInteractionComponent, createOrthoCam, GameScreen, LoadingSystem } from "luthe-amp";
+import { THREE, Game, GameScreen } from "luthe-amp";
+import { createOrthoCam } from "luthe-amp/lib/util/create-ortho-cam";
+import { MouseInteractionSystem } from "luthe-amp/lib/input/mouse-interaction-system";
+import { MouseInteractionComponent } from "luthe-amp/lib/input/mouse-interaction-component";
+import { LoadingSystem } from "luthe-amp/lib/util/loading-system";
+
 import createGauge from "../util/gauge.js";
 
 const loadingScreen = (promises, nextScreen) => {

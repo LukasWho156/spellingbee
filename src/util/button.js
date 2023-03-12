@@ -1,4 +1,6 @@
-import { THREE, Game, Sprite2D, MouseInteractionComponent } from "luthe-amp";
+import { THREE, Game } from "luthe-amp";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+import { MouseInteractionComponent } from "luthe-amp/lib/input/mouse-interaction-component";
 import { Text } from "troika-three-text";
 
 class Button extends EventTarget {

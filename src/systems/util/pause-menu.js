@@ -1,9 +1,8 @@
-import { THREE, Game, MouseInteractionComponent, Sprite2D } from "luthe-amp";
-import { TextButton } from "../../util/button.js";
+import { THREE, Game } from "luthe-amp";
+import { MouseInteractionComponent } from "luthe-amp/lib/input/mouse-interaction-component";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+
 import createPopup from "../../util/popup.js";
-import localize from "../../language/localize.js";
-import { Text } from "troika-three-text";
-import { getTextHeight, syncText } from "../../util/text-util.js";
 
 const GROWTH_RATE = 0.005;
 

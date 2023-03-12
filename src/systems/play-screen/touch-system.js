@@ -1,4 +1,8 @@
-import { THREE, Game, MouseInteractionSystem, MouseInteractionComponent, Sprite2D } from "luthe-amp"
+import { THREE, Game } from "luthe-amp"
+import { MouseInteractionSystem } from "luthe-amp/lib/input/mouse-interaction-system";
+import { MouseInteractionComponent } from "luthe-amp/lib/input/mouse-interaction-component";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+
 import ConnectionShader from "../../shaders/connection-shader.js";
 
 const makeTouchSystem = (screen, camera, boardSystem, evaluator, beehive, messenger) => {

@@ -28,7 +28,7 @@ const Butterfly = {
     texture: 'butterfly',
     background: 0,
     flying: true,
-    health: 400,
+    health: 50,
     nextAttack: (i, history) => {
         if(i === 0) {
             return ATTACKS.tap;

@@ -13,6 +13,7 @@ class HealthSystem {
     _maxHealth;
     _bloodPass;
     _bloodIntensity;
+    _messenger;
 
     get health() {
         return this._health;
@@ -25,13 +26,18 @@ class HealthSystem {
         this._bloodPass = bloodPass;
         this._bloodIntensity = 0;
         if(messenger) {
-            messenger.dealDamageToPlayer = (damage) => this.dealDamage(damage);
+            messenger.dealDamageToPlayer = (damage, piercing) => this.dealDamage(damage, piercing);
             messenger.healPlayer = (healthAmount) => this.heal(healthAmount);
+            this._messenger = messenger;
         }
     }
 
-    dealDamage = (damage) => {
-        this._health -= damage;
+    dealDamage = (damage, piercing) => {
+        const dmg = { value: damage }
+        if(!piercing && this._messenger) {
+            this._messenger.triggerFlowerDamagePlayer(dmg);
+        }
+        this._health -= Math.floor(dmg.value);
         if(this._health < 0) this._health = 0;
         const value = this._health / this._maxHealth;
         this._bloodIntensity = 1 - 0.75 * value;

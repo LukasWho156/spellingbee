@@ -1,16 +1,15 @@
-import { THREE, Game, Sprite2D, createOrthoCam, GameScreen, MouseInteractionSystem } from "luthe-amp";
+import { THREE, Game, GameScreen } from "luthe-amp";
+import { createOrthoCam } from "luthe-amp/lib/util/create-ortho-cam";
+import { MouseInteractionSystem } from "luthe-amp/lib/input/mouse-interaction-system";
+
 import { TextButton } from "../util/button.js";
 import localize from "../language/localize.js";
-import Cat from "../monsters/cat.js";
-import DungBeetle from "../monsters/dung-beetle.js";
-import Spider from "../monsters/spider.js";
-import StagBeetle from "../monsters/stag-beetle.js";
 import endlessPlayScreen from "./endless-play-screen.js";
 import worldSelectionScreen from "./world-selection-screen.js";
 import SlideSystem from "../systems/util/slide-system.js";
-import createPopup from "../util/popup.js";
 import backgroundSystem from "../systems/util/background-system.js";
 import campaignWorldScreen from "./campaign-world-screen.js";
+import ALL_MONSTERS from "../monsters/monsters.js";
 
 const mainMenuScreen = () => {
 
@@ -60,7 +59,7 @@ const mainMenuScreen = () => {
     bottomGroup.add(endlessButton.sprite);
     endlessButton.addToSystem(mis);
     endlessButton.addEventListener('click', () => {
-        slideSystem.triggerSlideout(() => Game.setActiveScreen(endlessPlayScreen([StagBeetle, DungBeetle, Spider, Cat])));
+        slideSystem.triggerSlideout(() => Game.setActiveScreen(endlessPlayScreen(ALL_MONSTERS)));
     });
 
     const settingsButton = TextButton(localize('mainMenu_settings', Game.settings.uiLanguage));

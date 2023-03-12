@@ -1,4 +1,5 @@
 import { Game } from "luthe-amp";
+
 import { getLetterFreqs } from "../../language/get-random-letter.js";
 
 const MULTIPLIERS = [1, 1, 1, 1, 1, 1.2, 1.6, 2.2, 3.0, 4.0, 5.0];
@@ -42,10 +43,13 @@ class WordEval {
         let damage = 0;
         for(const comb of this._boardSystem.chain) {
             if(comb.state === 'accepted') {
+                this._messenger.triggerFlowerCombDamage(comb);
                 damage += comb.damage;
             }
         }
-        this._messenger.dealDamageToMonster(damage * multiplier.value);
+        const totalDamage = { value: damage * multiplier.value };
+        this._messenger.triggerFlowerDamageCalculation(totalDamage, this._boardSystem.chain.length);
+        this._messenger.dealDamageToMonster(totalDamage.value);
         this._messenger.triggerMonsterAttacked();
         this._messenger.triggerCombsOnAccept(this._boardSystem.chain, multiplier.value);
         this._boardSystem.deselectAll();

@@ -1,18 +1,28 @@
-import { Game, createOrthoCam, GameScreen, THREE, MouseInteractionSystem } from "luthe-amp";
+import { Game, GameScreen, THREE } from "luthe-amp";
+import { createOrthoCam } from "luthe-amp/lib/util/create-ortho-cam";
+import { MouseInteractionSystem } from "luthe-amp/lib/input/mouse-interaction-system";
+import { ParticleSystem } from "luthe-amp/lib/graphics/systems/particle-system";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+
+import localize from "../language/localize.js";
 import HealthSystem from "../systems/play-screen/health-system.js";
 import backgroundSystem from "../systems/util/background-system.js"
 import pauseMenu from "../systems/util/pause-menu.js";
 import createPopup from "../util/popup.js";
 import WORLDS from "../worlds.js";
+import FLOWERS from "../flowers/flowers.js";
+import FlowerSystem from "../systems/play-screen/flower-system.js";
 
 const HEALING = 100;
 
-const campaignFlowerScreen = (player, parent) => {
+const campaignFlowerScreen = (player, flower, parent) => {
 
     const screen = new GameScreen();
 
     const mainScene = new THREE.Scene();
     const mainCamera = createOrthoCam();
+
+    const newFlower = FLOWERS.find(f => f.id === flower);
 
     screen.addRenderPass(mainScene, mainCamera);
 
@@ -23,8 +33,15 @@ const campaignFlowerScreen = (player, parent) => {
     screen.addSystem(healthSystem);
 
     const mis = new MouseInteractionSystem(Game.width, Game.height, mainCamera, Game.renderer.domElement);
+
+    const flowers = player.flowers.map(id => FLOWERS.find(f => f.id === id));
+    screen.addSystem(FlowerSystem(mainScene, mainScene, flowers, mis));
+
     screen.addSystem(mis);
     pauseMenu(mainScene, mainScene, mis).then(pm => screen.addSystem(pm));
+
+    const particleSystem = new ParticleSystem(mainScene, 'particles', 4, 2);
+    screen.addSystem(particleSystem);
 
     let chosen = false;
 
@@ -38,14 +55,40 @@ const campaignFlowerScreen = (player, parent) => {
     const petal = () => {
         if(chosen) return;
         chosen = true;
-        console.log('Received Petal');
+        player.flowers.push(newFlower.id);
+        const sprite = new Sprite2D({
+            texture: 'flowers',
+            handle: 'top left',
+            x: -300 + 60 * flowers.length,
+            y: -510,
+            scaleX: 0.12,
+            scaleY: 0.12,
+        });
+        sprite.setFrame(newFlower.frame);
+        mainScene.add(sprite);
+        for(let i = 0; i < 20; i++) {
+            particleSystem.spawn(6, {
+                position: new THREE.Vector3(
+                    (Math.random() + flowers.length) * 60 - 300,
+                    Math.random() * 60 + 450,
+                    50
+                ),
+                size: Math.random() * 0.2 + 0.3,
+                fadeRate: 0.003,
+                color: 0x7f7f7f,
+                blending: THREE.AdditiveBlending,
+            })
+        }
     }
 
     const flowerPopup = async () => {
         const popup = createPopup('popup', 559, 1140, 35, 15, mis);
         await popup.addHeading('flower_heading');
-        popup.addSprite('flowers', 0.5);
-        await popup.addTextBlock('flower_description', 'einen Löwenzahn', HEALING, 'steigert sich die Effektivität deiner Spezialwaben');
+        const sprite = popup.addSprite('flowers', 0.5);
+        sprite.setFrame(newFlower.frame);
+        const name = localize(`flowerName_${newFlower.id}`, Game.settings.uiLanguage);
+        const power = localize(`flowerPower_${newFlower.id}`, Game.settings.uiLanguage);
+        await popup.addTextBlock('flower_description', name, HEALING, power);
         const nectarButton = popup.addButton('flower_buttonNectar');
         nectarButton.addEventListener('click', heal);
         const petalButton = popup.addButton('flower_buttonPetal');
@@ -67,7 +110,7 @@ const campaignFlowerScreen = (player, parent) => {
                 fp.scale.set(size, size, 1);
             }
             if(chosen && size > 0) {
-                size -= delta * 0.003;
+                size -= delta * 0.002;
                 if(size <= 0) {
                     size = 0;
                     player.progress++;

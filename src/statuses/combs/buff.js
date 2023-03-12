@@ -1,4 +1,5 @@
-import { THREE, Game, Sprite2D } from "luthe-amp";
+import { THREE, Game } from "luthe-amp";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
 
 class Buff {
 
@@ -7,6 +8,10 @@ class Buff {
     _shadowSprite;
     _lastSpawn;
     _onApply;
+
+    get isBuff() {
+        return true;
+    }
 
     constructor(comb, combSprite, color, particle, onAccept, onApply) {
         this._comb = comb;
@@ -17,18 +22,28 @@ class Buff {
         })
         this._color = color;
         this._particle = particle;
-        this.onAccept = onAccept;
+        this._onAccept = onAccept;
         this._onApply = onApply ?? (() => {});
     }
 
-    onApply = () => {
+    onApply = (messenger) => {
         this._shadowSprite.scale.set(1.2, 1.2, 1);
         this._shadowSprite.material.opacity = 0.3;
         this._shadowSprite.material.color.set(this._color);
         this._shadowSprite.material.blending = THREE.AdditiveBlending;
         this._combSprite.add(this._shadowSprite);
         this._lastSpawn = 0;
-        this._onApply(this._comb);
+        const multiplier = { value: 1 };
+        messenger.triggerFlowerBuffEffectivity(multiplier);
+        this._onApply(this._comb, multiplier.value);
+    }
+
+    onAccept = (messenger, multiplier) => {
+        console.log(multiplier);
+        const effectiveMultiplier = { value: multiplier };
+        messenger.triggerFlowerBuffEffectivity(effectiveMultiplier);
+        console.log(effectiveMultiplier);
+        this._onAccept(messenger, effectiveMultiplier.value);
     }
 
     onShrink = (percentage) => {

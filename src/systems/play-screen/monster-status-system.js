@@ -1,4 +1,7 @@
-import { THREE, Game, Sprite2D } from "luthe-amp";
+import { THREE, Game } from "luthe-amp";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+import { Text } from "troika-three-text";
+
 import MonsterStatusComponent from "./monster-status-component.js";
 import createGauge from "../../util/gauge.js";
 
@@ -16,7 +19,7 @@ class MonsterStatusSystem {
         this._statuses = [];
         this._messenger = messenger;
         this._gaugeGroup = new THREE.Group();
-        messenger.applyStatusToMonster = (status, time) => this.applyStatus(status, time);
+        messenger.applyStatusToMonster = (status, time, stacks) => this.applyStatus(status, time, stacks);
         messenger.calculateMonsterDamage = (damage, wordLength) => {
             return this._statuses.reduce((prev, status) => status.component.onDamageCalculation(prev, wordLength), damage);
         }
@@ -27,16 +30,21 @@ class MonsterStatusSystem {
         }
     }
 
-    applyStatus = (status, time) => {
+    applyStatus = (status, time, stacks) => {
         if(!this._messenger.getCurrentMonster()) {
             return;
         }
         const existing = this._statuses.find(s => s.status === status);
         if(existing) {
             existing.component.addTime(time);
+            if(stacks) existing.component.addStacks(stacks);
+            if(existing.stackLabel) {
+                existing.stackLabel.text = existing.component.stacks;
+                existing.stackLabel.sync();
+            }
             return;
         }
-        const component = new MonsterStatusComponent(status.apply(), time, this._messenger);
+        const component = new MonsterStatusComponent(status.apply(), time, this._messenger, stacks);
         component.onApply();
         const gauge = createGauge('ring', 75, 75, 'ccw');
         gauge.setColor(status.color);
@@ -50,7 +58,22 @@ class MonsterStatusSystem {
         intent.setFrame(status.intent ?? 0)
         gauge.add(intent);
         this._gaugeGroup.add(gauge);
-        this._statuses.push({status: status, component: component, gauge: gauge});
+        let stackLabel =null;
+        if(stacks) {
+            stackLabel = new Text();
+            stackLabel.text = component.stacks;
+            stackLabel.font = Game.font;
+            stackLabel.fontSize = 30;
+            stackLabel.anchorX = 'left';
+            stackLabel.anchorY = 'bottom';
+            stackLabel.color = 0x000000;
+            stackLabel.outlineColor = 0xffffff;
+            stackLabel.outlineBlur = '100%';
+            stackLabel.sync();
+            stackLabel.position.set(20, -45, 5);
+            this._gaugeGroup.add(stackLabel);
+        } 
+        this._statuses.push({status: status, component: component, gauge: gauge, stackLabel: stackLabel});
         this._repositionGauges();
     }
 

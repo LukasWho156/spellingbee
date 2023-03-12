@@ -1,4 +1,7 @@
-import { Game, connectWS, monitorMemory } from 'luthe-amp';
+import { Game } from 'luthe-amp';
+import { connectWS } from 'luthe-amp/lib/util/connect-ws'
+import { monitorMemory } from 'luthe-amp/lib/util/monitor-memory';
+
 import loadingScreen from './screens/loading-screen.js';
 import config from './config.json';
 import loadDictionary from './language/get-dictionary.js';
@@ -96,7 +99,7 @@ async function main() {
         Game.loadTexture(texButterfly, 'butterfly'),
         Game.loadTexture(texDragonfly, 'dragonfly'),
         Game.loadTexture(texBackgrounds, 'backgrounds', { framesX: 4, framesY: 2 }),
-        Game.loadTexture(texFlowers, 'flowers'),
+        Game.loadTexture(texFlowers, 'flowers', { framesX: 4, framesY: 3 }),
         Game.loadTexture(texBeehiveBackground, 'beehiveBackground'),
         Game.loadTexture(texBeehiveForeground, 'beehiveForeground'),
         Game.loadTexture(texMenuButton, 'menuButton'),
@@ -116,8 +119,11 @@ async function main() {
         }),
     ];
 
+    Game.wordFinder = new Worker(new URL('./util/worker-word-finder-manager.js', import.meta.url));
+
     Game.setActiveScreen(loadingScreen(promises, () => {
         Game.dictionary = Game.dictionaries[Game.settings.playingLanguage];
+        Game.wordFinder.postMessage({ dictionary: Game.dictionary });
         const mainMenu = mainMenuScreen();
         Game.mainMenu = mainMenu;
         return mainMenu;

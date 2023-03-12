@@ -16,7 +16,7 @@ const ATTACKS = {
         windupTime: 0,
         color: 0xafafaf,
         action: (messenger) => {
-            messenger.applyStatusToMonster(StatusSpiky, -1)
+            messenger.applyStatusToMonster(StatusSpiky, -1, 2)
         }
     }
 }
@@ -24,7 +24,7 @@ const ATTACKS = {
 const StagBeetle = {
     texture: 'stagBeetle',
     background: 2,
-    health: 750,
+    health: 50,
     nextAttack: (i, history) => {
         if (i == 0) {
             return ATTACKS.defend;

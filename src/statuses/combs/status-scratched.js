@@ -1,4 +1,4 @@
-import { Sprite2D } from "luthe-amp";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
 
 const StatusScratched = {
     apply: (comb, sprite) => {

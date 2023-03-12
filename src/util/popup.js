@@ -1,5 +1,7 @@
-import { THREE, Game, Sprite2D } from "luthe-amp";
+import { THREE, Game } from "luthe-amp";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
 import { Text } from "troika-three-text";
+
 import PopupShader from "../shaders/popup-shader.js";
 import localize from "../language/localize.js";
 import { TextButton } from "./button.js";

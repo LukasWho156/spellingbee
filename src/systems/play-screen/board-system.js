@@ -1,12 +1,13 @@
-import { THREE, Game, SimpleSystem, Sprite2D } from 'luthe-amp';
+import { THREE, Game, SimpleSystem } from 'luthe-amp';
+import { Sprite2D } from 'luthe-amp/lib/graphics/utility/sprite-2d';
 import { Text } from 'troika-three-text';
+
 import GrowthComponent from './growth-component.js';
 import AgeComponent from './age-component.js';
 import { getRandomLetter } from '../../language/get-random-letter.js';
-import StatusWebbed from '../../statuses/combs/status-webbed.js';
-import StatusHealth from '../../statuses/combs/status-health.js';
 import createGauge from '../../util/gauge.js';
 import getRandomBuff from '../../statuses/combs/get-random-buff.js';
+import HintSystem from './hint-system.js';
 
 const INTERACTION_DIST = 2500;
 const REROLL_DAMAGE = 50;
@@ -38,6 +39,8 @@ class BoardSystem extends EventTarget {
 
     _baseBuffProbability = -0.1;
     _buffIncrease = 0.04;
+
+    _hintSystem;
 
     get board() {
         return this._board;
@@ -85,6 +88,7 @@ class BoardSystem extends EventTarget {
         this._messenger = messenger;
 
         messenger.getRandomCombs = (amount) => this.getRandomCombs(amount);
+        messenger.getRandomNeighbour = (comb) => this._getNeighbour(comb);
         messenger.deselectAll = () => this.deselectAll();
         messenger.spawnParticleOverComb = (comb, particle) => this._spawnParticleOverComb(comb, particle);
     }
@@ -148,6 +152,16 @@ class BoardSystem extends EventTarget {
             combsCopy.splice(rnd, 1);
         }
         return result;
+    }
+
+    _getNeighbour = (comb) => {
+        const neighbours = this._combs.filter(c2 => {
+            if(comb.x === c2.x && comb.y === c2.y) return false;
+            if(Math.abs(comb.x - c2.x) > 1) return false;
+            if(Math.abs(comb.y - c2.y) > 1) return false;
+            return true;
+        });
+        return neighbours[Math.floor(Math.random() * neighbours.length)];
     }
 
     startRerollTimer = () => {
@@ -234,6 +248,9 @@ class BoardSystem extends EventTarget {
         this._restockSystem.add({
             update: () => {
                 if(entity.state === 'rotten' || entity.state === 'accepted') {
+                    if(this._hintSystem && entity.state === 'accepted') {
+                        this._hintSystem.triggerWordFound();
+                    }
                     if(!!this._chain.find(e => e === entity)) {
                         this.deselectAll();
                     }
@@ -243,6 +260,7 @@ class BoardSystem extends EventTarget {
             }
         })
         this._board.add(sprite);
+        if(this._hintSystem) this._hintSystem.triggerReload();
     }
 
     _popComb = (comb, success) => {
@@ -305,7 +323,14 @@ class BoardSystem extends EventTarget {
             }
         }
         this._buffProbablility = this._baseBuffProbability;
+        const chance = {value: this._buffIncrease};
+        this._messenger.triggerFlowerBuffChance(chance);
+        this._buffIncrease = chance.value;
         this._jokerOnBoard = false;
+        if(this._messenger.triggerFlowerHints()) {
+            this._hintSystem = HintSystem(this._combs, this._messenger, 20000);
+            this._hintSystem.triggerReload();
+        }
     }
 
     update = (delta, globalTime) => {
@@ -316,10 +341,11 @@ class BoardSystem extends EventTarget {
             this._rerollGauge.setValue(this._rerollTimer / 1000);
             if(this._rerollTimer >= 1000) {
                 this.popAll();
-                this._messenger.dealDamageToPlayer(REROLL_DAMAGE);
+                this._messenger.dealDamageToPlayer(REROLL_DAMAGE, true);
                 this.stopRerollTimer();
             }
         }
+        if(this._hintSystem) this._hintSystem.update(delta);
     }
 
 }

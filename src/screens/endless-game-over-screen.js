@@ -1,4 +1,7 @@
-import { THREE, Game, createOrthoCam, GameScreen, Sprite2D } from "luthe-amp";
+import { THREE, Game, GameScreen } from "luthe-amp";
+import { createOrthoCam } from "luthe-amp/lib/util/create-ortho-cam";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+
 import GrowthComponent from "../systems/play-screen/growth-component.js";
 import SlideSystem from "../systems/util/slide-system.js";
 import { renderH1, renderWhiteText } from "../util/text-util.js";

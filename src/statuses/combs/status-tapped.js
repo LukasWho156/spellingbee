@@ -1,4 +1,5 @@
-import { THREE, Game, Sprite2D } from "luthe-amp";
+import { THREE, Game } from "luthe-amp";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
 
 const StatusTapped = {
     apply: (comb, sprite) => {

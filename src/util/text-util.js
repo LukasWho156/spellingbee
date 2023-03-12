@@ -1,5 +1,6 @@
 import { Game } from "luthe-amp";
 import { Text } from "troika-three-text";
+
 import localize from "../language/localize.js";
 
 const syncText = (text) => {

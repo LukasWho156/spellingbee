@@ -2,6 +2,7 @@ class MonsterStatusComponent {
 
     _status;
     _decayRate;
+    _stacks;
     _value;
     _messenger;
 
@@ -9,11 +10,15 @@ class MonsterStatusComponent {
         return this._value;
     }
 
+    get stacks() {
+        return this._stacks;
+    }
+
     get isDead() {
         return this._value < 0;
     }
 
-    constructor(status, time, messenger) {
+    constructor(status, time, messenger, stacks) {
         this._status = status;
         this._decayRate = (time > 0) ? 1 / time : 0;
         this._messenger = messenger;
@@ -23,6 +28,9 @@ class MonsterStatusComponent {
         status.onDamageCalculation ??= (damage) => damage;
         status.onAttacked ??= () => {};
         status.onDie ??= () => {};
+        status.addStacks ??= () => {};
+        status.getStacks ??= () => 0;
+        if(stacks) this.addStacks(stacks);
     }
 
     onApply = () => {
@@ -43,6 +51,11 @@ class MonsterStatusComponent {
         const newTime = remainingTime + time;
         this._decayRate = 1 / newTime;
         this._value = 1;
+    }
+
+    addStacks = (stacks) => {
+        this._status.addStacks(stacks);
+        this._stacks = this._status.getStacks();
     }
 
     remove = () => {

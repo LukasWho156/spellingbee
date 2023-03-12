@@ -1,11 +1,11 @@
 import { THREE, Game } from "luthe-amp";
-import { Text } from "troika-three-text";
-import localize from "../language/localize.js";
+
 import PulseComponent from "../systems/util/pulse-component.js";
 import GrowthComponent from "../systems/play-screen/growth-component.js";
 import playScreen from "./play-screen.js";
 import { renderH1 } from "../util/text-util.js";
 import campaignGameOverScreen from "./campaign-game-over-screen.js";
+import FLOWERS from "../flowers/flowers.js";
 
 const CONFETTI_COLORS = [
     //0xcf3f3f,
@@ -19,7 +19,9 @@ const CONFETTI_COLORS = [
 
 const campaignPlayScreen = (player, monster, background, parent) => {
 
-    const screen = playScreen(player.health, 500, background, () => {
+    const flowers = player.flowers.map(id => FLOWERS.find(f => f.id === id));
+
+    const screen = playScreen(player.health, 500, flowers, background, () => {
         Game.saveData.currentRun = null;
         Game.saveToStorage('bee_saveData', Game.saveData);
         return campaignGameOverScreen();

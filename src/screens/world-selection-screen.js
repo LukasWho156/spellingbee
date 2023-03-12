@@ -1,5 +1,8 @@
-import { THREE, createOrthoCam, Sprite2D, GameScreen, MouseInteractionSystem, Game } from "luthe-amp"
-import { Text } from "troika-three-text";
+import { THREE, GameScreen, Game } from "luthe-amp"
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+import { createOrthoCam } from "luthe-amp/lib/util/create-ortho-cam";
+import { MouseInteractionSystem } from "luthe-amp/lib/input/mouse-interaction-system";
+
 import { CombButton, TextButton } from "../util/button.js";
 import WORLDS from "../worlds.js";
 import localize from "../language/localize.js";

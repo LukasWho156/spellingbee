@@ -1,5 +1,7 @@
-import { THREE, Game, SimpleSystem, Sprite2D } from "luthe-amp";
+import { THREE, Game, SimpleSystem } from "luthe-amp";
+import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
 import { Text } from "troika-three-text";
+
 import createGauge from "../../util/gauge.js";
 import AttackComponent from "./attack-component.js";
 import BopComponent from "./bop-component.js";
@@ -113,6 +115,7 @@ class MonsterSystem {
             speedBonus: monster.speedBonus ?? 1,
             sprite: sprite,
         };
+        this._messenger.triggerFlowerEnemySpawned(this._currentMonster);
         this._internalSystem.add(new GrowthComponent(this._currentMonster, sprite));
         this._internalSystem.add(new BopComponent(this._currentMonster, sprite));
         this._internalSystem.add(new DamagedComponent(this._currentMonster, sprite));

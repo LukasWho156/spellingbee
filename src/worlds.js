@@ -4,6 +4,8 @@ import Spider from "./monsters/spider.js";
 import StagBeetle from "./monsters/stag-beetle.js";
 import Butterfly from "./monsters/butterfly.js";
 import Dragonfly from "./monsters/dragonfly.js";
+import Rat from "./monsters/rat.js";
+import Beekeeper from "./monsters/beekeeper.js";
 
 const WORLDS = [
     {
@@ -16,7 +18,7 @@ const WORLDS = [
         titleKey: 'world_meadow',
         difficulty: 2,
         background: 1,
-        monsters: [StagBeetle, DungBeetle, Spider, Cat],
+        monsters: [Beekeeper, StagBeetle, DungBeetle, Spider, Cat],
     },
     {
         titleKey: 'world_woods',
@@ -34,7 +36,7 @@ const WORLDS = [
         titleKey: 'world_street',
         difficulty: 4,
         background: 5,
-        monsters: [StagBeetle, DungBeetle, Spider, Cat],
+        monsters: [Rat, StagBeetle, DungBeetle, Spider, Cat],
     },
     {
         titleKey: 'world_bossrush',

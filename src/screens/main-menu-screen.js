@@ -10,6 +10,7 @@ import SlideSystem from "../systems/util/slide-system.js";
 import backgroundSystem from "../systems/util/background-system.js";
 import campaignWorldScreen from "./campaign-world-screen.js";
 import ALL_MONSTERS from "../monsters/monsters.js";
+import SettingsPopup from "../systems/util/settings-popup.js";
 
 const mainMenuScreen = () => {
 
@@ -66,8 +67,12 @@ const mainMenuScreen = () => {
     settingsButton.sprite.position.y = -500;
     bottomGroup.add(settingsButton.sprite);
     settingsButton.addToSystem(mis);
-    settingsButton.addEventListener('click', () => {
-        // TODO
+
+    SettingsPopup(mainScene, mis).then(popup => {
+        screen.addSystem(popup);
+        settingsButton.addEventListener('click', () => {
+            popup.open();
+        });
     });
 
     screen.setFromBackground = (bg) => {

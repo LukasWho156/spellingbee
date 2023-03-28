@@ -15,7 +15,7 @@ const ATTACKS = {
         id: 'scratch',
         intent: 3,
         windupTime: 5000,
-        color: 0xff3f3f,
+        color: 0xff7f7f,
         action: (messenger) => {
             messenger.dealDamageToPlayer(2);
             const combs = messenger.getRandomCombs(1);
@@ -26,7 +26,7 @@ const ATTACKS = {
     },
     bite: {
         id: 'bite',
-        intent: 4,
+        intent: 14,
         windupTime: 5000,
         color: 0xff3f3f,
         action: (messenger) => {
@@ -42,7 +42,7 @@ const ATTACKS = {
 const Rat = {
     texture: 'rat',
     background: 5,
-    health: 600,
+    health: 400,
     nextAttack: (i, history) => {
         if(i === 0) {
             return ATTACKS.bite;

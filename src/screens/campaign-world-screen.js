@@ -33,7 +33,7 @@ const PATH = [
     { decoration: 6 },
 ]
 
-const COMPATIBLE_VERSION = 2;
+const COMPATIBLE_VERSION = 4;
 
 const campaignWorldScreen = (worldIndex, fromBackground, player) => {
 

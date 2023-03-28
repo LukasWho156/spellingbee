@@ -27,6 +27,8 @@ class MonsterStatusComponent {
         status.onUpdate ??= () => {};
         status.onDamageCalculation ??= (damage) => damage;
         status.onAttacked ??= () => {};
+        status.onAttackPlayer ??= () => {};
+        status.onCombSpawned ??= () => {}
         status.onDie ??= () => {};
         status.addStacks ??= () => {};
         status.getStacks ??= () => 0;
@@ -43,6 +45,14 @@ class MonsterStatusComponent {
 
     onAttacked = () => {
         this._status.onAttacked(this._messenger);
+    }
+
+    onAttackPlayer = (damage) => {
+        this._status.onAttackPlayer(damage);
+    }
+
+    onCombSpawned = (comb) => {
+        this._status.onCombSpawned(comb);
     }
 
     addTime = (time) => {

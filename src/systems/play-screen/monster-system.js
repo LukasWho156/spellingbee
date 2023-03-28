@@ -52,8 +52,6 @@ class MonsterSystem {
         this._timerGauge.position.set(217, 130);
         this._intent = new Sprite2D({
             texture: Game.getTexture('intents'),
-            framesX: 4,
-            framesY: 2,
             scaleX: 0.2,
             scaleY: 0.2,
         });
@@ -79,7 +77,7 @@ class MonsterSystem {
     }
 
     _startAttack = () => {
-        this._currentAttack = this._currentMonster.nextAttack(this._currentMonster.attackIndex, this._currentMonster.history);
+        this._currentAttack = this._currentMonster.nextAttack(this._currentMonster.attackIndex, this._currentMonster.history, this._messenger);
         this._timerGauge.setColor(this._currentAttack.color);
         this._currentMonster.attackIndex++;
         this._currentMonster.history.push(this._currentAttack.id);

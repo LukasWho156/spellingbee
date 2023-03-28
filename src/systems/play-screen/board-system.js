@@ -89,6 +89,7 @@ class BoardSystem extends EventTarget {
 
         messenger.getRandomCombs = (amount) => this.getRandomCombs(amount);
         messenger.getRandomNeighbour = (comb) => this._getNeighbour(comb);
+        messenger.getLetteredCombs = (letter) => this._getLetteredCombs(letter);
         messenger.deselectAll = () => this.deselectAll();
         messenger.spawnParticleOverComb = (comb, particle) => this._spawnParticleOverComb(comb, particle);
     }
@@ -164,6 +165,10 @@ class BoardSystem extends EventTarget {
         return neighbours[Math.floor(Math.random() * neighbours.length)];
     }
 
+    _getLetteredCombs = (letter) => {
+        return this._combs.filter(c => c.letter === letter);
+    }
+
     startRerollTimer = () => {
         this._rerollHeld = true;
         this._rerollTimer = 0;
@@ -205,6 +210,7 @@ class BoardSystem extends EventTarget {
             sprite: sprite,
             statuses: [],
         };
+        this._messenger.triggerMonsterCombSpawned(entity);
         if(Math.random() < this._buffProbablility) {
             if(Math.random() < 0.2 && !this._jokerOnBoard) {
                 entity.letter = '*';
@@ -341,7 +347,9 @@ class BoardSystem extends EventTarget {
             this._rerollGauge.setValue(this._rerollTimer / 1000);
             if(this._rerollTimer >= 1000) {
                 this.popAll();
-                this._messenger.dealDamageToPlayer(REROLL_DAMAGE, true);
+                const dmg = { value: REROLL_DAMAGE };
+                this._messenger.triggerFlowerRerollPrice(dmg);
+                this._messenger.dealDamageToPlayer(dmg.value, true);
                 this.stopRerollTimer();
             }
         }

@@ -35,6 +35,7 @@ class HealthSystem {
     dealDamage = (damage, piercing) => {
         const dmg = { value: damage }
         if(!piercing && this._messenger) {
+            this._messenger.triggerPlayerAttacked(dmg);
             this._messenger.triggerFlowerDamagePlayer(dmg);
         }
         this._health -= Math.floor(dmg.value);

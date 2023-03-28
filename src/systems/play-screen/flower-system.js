@@ -78,6 +78,13 @@ const FlowerSystem = (scene, top, flowers, mis, messenger) => {
         })
     };
 
+    messenger.triggerFlowerRerollPrice = (price) => {
+        flowers.forEach(flower => {
+            if(typeof(flower.onRerollPrice) !== 'function') return;
+            flower.onRerollPrice(price);
+        })
+    }
+
     messenger.triggerFlowerHints = () => {
         for (const flower of flowers) {
             if(flower.hints) return true;

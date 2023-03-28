@@ -1,5 +1,8 @@
 node_modules
 dist/*
+dev/*
 
 !dist/index.html
 !dist/styles.css
+!dev/index.html
+!dev/styles.css

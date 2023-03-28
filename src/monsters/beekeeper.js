@@ -7,18 +7,16 @@ const ATTACKS = {
         windupTime: 5000,
         color: 0xffaf3f,
         action: (messenger) => {
-            const afflictedCount = messenger.countStatuses(StatusSlimed);
-            console.log('Slimed combs: ', afflictedCount)
-            messenger.dealDamageToPlayer(afflictedCount);
+            messenger.dealDamageToPlayer(5);
         }
     },
     sneeze: {
         id: 'sneeze',
-        intent: 3,
+        intent: 8,
         windupTime: 5000,
-        color: 0xff3f3f,
+        color: 0x3fff3f,
         action: (messenger) => {
-            const combs = messenger.getRandomCombs(3);
+            const combs = messenger.getRandomCombs(5);
             for(const comb of combs) {
                 messenger.applyStatusToComb(comb, StatusSlimed);
             }

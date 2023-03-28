@@ -28,6 +28,16 @@ class MonsterStatusSystem {
                 status.component.onAttacked()
             });    
         }
+        messenger.triggerPlayerAttacked = (damage) => {
+            this._statuses.forEach(status => {
+                status.component.onAttackPlayer(damage);
+            });    
+        }
+        messenger.triggerMonsterCombSpawned = (comb) => {
+            this._statuses.forEach(status => {
+                status.component.onCombSpawned(comb);
+            });    
+        }
     }
 
     applyStatus = (status, time, stacks) => {
@@ -50,8 +60,6 @@ class MonsterStatusSystem {
         gauge.setColor(status.color);
         const intent = new Sprite2D({
             texture: Game.getTexture('intents'),
-            framesX: 4,
-            framesY: 2,
             scaleX: 0.15,
             scaleY: 0.15,
         });
@@ -71,7 +79,7 @@ class MonsterStatusSystem {
             stackLabel.outlineBlur = '100%';
             stackLabel.sync();
             stackLabel.position.set(20, -45, 5);
-            this._gaugeGroup.add(stackLabel);
+            gauge.add(stackLabel);
         } 
         this._statuses.push({status: status, component: component, gauge: gauge, stackLabel: stackLabel});
         this._repositionGauges();

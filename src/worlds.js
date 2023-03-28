@@ -6,13 +6,15 @@ import Butterfly from "./monsters/butterfly.js";
 import Dragonfly from "./monsters/dragonfly.js";
 import Rat from "./monsters/rat.js";
 import Beekeeper from "./monsters/beekeeper.js";
+import Bacteria from "./monsters/bacteria.js";
+import BeeEater from "./monsters/bee-eater.js";
 
 const WORLDS = [
     {
         titleKey: 'world_sky',
         difficulty: 1,
         background: 0,
-        monsters: [Butterfly, StagBeetle, DungBeetle, Spider, Cat],
+        monsters: [BeeEater, Butterfly, StagBeetle, DungBeetle, Spider, Cat],
     },
     {
         titleKey: 'world_meadow',
@@ -36,7 +38,7 @@ const WORLDS = [
         titleKey: 'world_street',
         difficulty: 4,
         background: 5,
-        monsters: [Rat, StagBeetle, DungBeetle, Spider, Cat],
+        monsters: [Rat, Bacteria, Rat, StagBeetle, DungBeetle, Spider, Cat],
     },
     {
         titleKey: 'world_bossrush',

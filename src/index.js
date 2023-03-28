@@ -32,6 +32,8 @@ import texCat from './assets/gfx/cat.png';
 import texRat from './assets/gfx/rat.png';
 import texButterfly from './assets/gfx/butterfly.png';
 import texDragonfly from './assets/gfx/dragonfly.png';
+import texBacteria from './assets/gfx/bacteria.png';
+import texBeeEater from './assets/gfx/beeeater.png';
 
 import texBackgrounds from './assets/gfx/backgrounds.png';
 
@@ -82,7 +84,7 @@ async function main() {
         Game.loadTexture(texShadow, 'shadow'),
         Game.loadTexture(texCombIcons, 'combIcons', { framesX: 4, framesY: 4 }),
         Game.loadTexture(texParticles, 'particles'),
-        Game.loadTexture(texIntents, 'intents'),
+        Game.loadTexture(texIntents, 'intents', { framesX: 4, framesY: 4 }),
         Game.loadTexture(texHealthbar, 'healthbar'),
         Game.loadTexture(texHoneyBar, 'honeyBar'),
         Game.loadTexture(texRing, 'ring'),
@@ -98,6 +100,8 @@ async function main() {
         Game.loadTexture(texRat, 'rat'),
         Game.loadTexture(texButterfly, 'butterfly'),
         Game.loadTexture(texDragonfly, 'dragonfly'),
+        Game.loadTexture(texBacteria, 'bacteria'),
+        Game.loadTexture(texBeeEater, 'beeEater'),
         Game.loadTexture(texBackgrounds, 'backgrounds', { framesX: 4, framesY: 2 }),
         Game.loadTexture(texFlowers, 'flowers', { framesX: 4, framesY: 3 }),
         Game.loadTexture(texBeehiveBackground, 'beehiveBackground'),
@@ -127,13 +131,6 @@ async function main() {
         const mainMenu = mainMenuScreen();
         Game.mainMenu = mainMenu;
         return mainMenu;
-        /*
-        return campaignWorldScreen({
-            background: 3,
-            monsters: [StagBeetle, DungBeetle, Spider, Cat],
-        });
-        */
-        //return campaignPlayScreen([StagBeetle, DungBeetle, Spider, Cat][Math.floor(Math.random() * 4)]);
     }));
 
     Game.start();

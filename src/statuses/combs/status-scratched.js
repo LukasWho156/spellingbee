@@ -25,7 +25,7 @@ class Scratched {
     onApply = () => {
         this._scratchSprite.scale.set(0, 0, 1);
         this._combSprite.add(this._scratchSprite);
-        this._comb.damage = this._comb.damage * 0.4;
+        this._comb.damage = 0;
     }
 
     onGrow = (percentage) => {
@@ -37,7 +37,6 @@ class Scratched {
 
     onDie = () => {
         this._combSprite.remove(this._scratchSprite);
-        this._comb.damage = this._comb.damage / 0.4;
     }
 
 }

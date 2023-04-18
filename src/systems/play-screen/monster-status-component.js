@@ -15,7 +15,7 @@ class MonsterStatusComponent {
     }
 
     get isDead() {
-        return this._value < 0;
+        return this._value < 0 || this.stacks <= 0;
     }
 
     constructor(status, time, messenger, stacks) {
@@ -39,8 +39,8 @@ class MonsterStatusComponent {
         this._status.onApply(this._messenger);
     }
 
-    onDamageCalculation = (damage) => {
-        return this._status.onDamageCalculation(damage);
+    onDamageCalculation = (damage, wordLength) => {
+        return this._status.onDamageCalculation(damage, wordLength, this._messenger);
     }
 
     onAttacked = () => {
@@ -52,7 +52,7 @@ class MonsterStatusComponent {
     }
 
     onCombSpawned = (comb) => {
-        this._status.onCombSpawned(comb);
+        this._status.onCombSpawned(comb, this._messenger);
     }
 
     addTime = (time) => {
@@ -77,7 +77,7 @@ class MonsterStatusComponent {
         if(this._value > 0 && typeof(status.setCustomValue) === 'function') {
             this._value = status.setCustomValue(this._messenger);
         }
-        if(this._value <= 0) {
+        if(this._value <= 0 || this.stacks <= 0) {
             this._status.onDie(this._messenger);
         } else {
             this._status.onUpdate(delta, globalTime, this._messenger);

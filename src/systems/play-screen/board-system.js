@@ -113,6 +113,9 @@ class BoardSystem extends EventTarget {
     }
 
     selectComb = (comb) => {
+        if(comb.frozen) {
+            return;
+        }
         comb.state = 'selected',
         this._chain.push(comb);
         this._updateChain();
@@ -210,7 +213,6 @@ class BoardSystem extends EventTarget {
             sprite: sprite,
             statuses: [],
         };
-        this._messenger.triggerMonsterCombSpawned(entity);
         if(Math.random() < this._buffProbablility) {
             if(Math.random() < 0.2 && !this._jokerOnBoard) {
                 entity.letter = '*';
@@ -222,6 +224,7 @@ class BoardSystem extends EventTarget {
         } else {
             this._buffProbablility += this._buffIncrease;
         }
+        this._messenger.triggerMonsterCombSpawned(entity);
         if(entity.letter === '*') {
             const text = new Sprite2D({texture: 'combIcons'});
             text.setFrame(2);

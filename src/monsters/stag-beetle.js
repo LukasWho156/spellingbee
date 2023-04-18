@@ -24,7 +24,7 @@ const ATTACKS = {
 const StagBeetle = {
     texture: 'stagBeetle',
     background: 2,
-    health: 50,
+    health: 250,
     nextAttack: (i, history) => {
         if (i == 0) {
             return ATTACKS.defend;

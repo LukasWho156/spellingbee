@@ -2,6 +2,7 @@ const StatusSpiky = {
     id: 'spiky',
     color: 0xafafaf,
     intent: 4,
+    priority: 0,
     apply: () => {
         return new Spiky();
     }

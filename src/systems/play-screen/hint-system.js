@@ -25,7 +25,7 @@ const HintSystem = (combs, messenger, timerLength) => {
     const triggerReload = () => {
         newCombs = true;
         hints = hints.filter(hint => {
-            return !hint.find(comb => comb.state === 'removed');
+            return !hint.find(comb => comb?.state === 'removed');
         })
     }
 

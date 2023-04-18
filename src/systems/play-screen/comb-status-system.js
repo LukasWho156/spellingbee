@@ -12,6 +12,7 @@ class CombStatusSystem {
         this._statuses = [];
         messenger.applyStatusToComb = (comb, status) => this.applyStatus(comb, status);
         messenger.countStatuses = this.countStatuses;
+        messenger.getAffectedCombs = this.getAffectedCombs;
         messenger.removeStatusFromComb = (comb, status) => this.removeStatus(comb, status);
         messenger.triggerCombsBeforeAccept = (combs) => {
             combs.forEach(comb => comb.statuses.forEach(status => status.component.beforeAccept()));
@@ -32,15 +33,20 @@ class CombStatusSystem {
         comb.statuses.push({status: status, component: component})
     }
 
-    countStatuses = (status) => {
+    getAffectedCombs = (status) => {
         return this._combs.filter(c => {
             return c.statuses.find(s => s.status === status);
-        }).length;
+        });
+    }
+
+    countStatuses = (status) => {
+        return this.getAffectedCombs(status).length;
     }
 
     removeStatus = (comb, status) => {
+        if(!comb) return;
         const toRemove = comb.statuses.find(s => s.status === status);
-        if(!status) return;
+        if(!toRemove) return;
         toRemove.component.remove();
     }
 

@@ -27,7 +27,7 @@ const ATTACKS = {
 const Beekeeper = {
     texture: 'beekeeper',
     background: 1,
-    health: 800,
+    health: 500,
     nextAttack: (i, history) => {
         if(i === 0) {
             return ATTACKS.sneeze;

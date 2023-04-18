@@ -47,7 +47,7 @@ const playScreen = (health, maxHealth, flowers, background, gameOverScreen, slid
     const bloodPass = new ExtendedShaderPass(BloodShader);
     screen.addPostProcessingPass(bloodPass);
 
-    const particleSystem = new ParticleSystem(healthbarGroup, Game.getTexture('particles'), 4, 2);
+    const particleSystem = new ParticleSystem(healthbarGroup, Game.getTexture('particles'), 4, 3);
     screen.addSystem(particleSystem);
     screen.particleSystem = particleSystem;
 
@@ -64,6 +64,8 @@ const playScreen = (health, maxHealth, flowers, background, gameOverScreen, slid
     messenger.isPaused = () => {
         return _paused;
     }
+
+    messenger.particleSystem = particleSystem;
 
     const healthSys = new HealthSystem(healthbarGroup, health, maxHealth, bloodPass, messenger);
     screen.addSystem(healthSys);

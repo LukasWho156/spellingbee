@@ -27,8 +27,8 @@ const ATTACKS = {
 
 const Cat = {
     texture: 'cat',
-    background: 5,
-    health: 750,
+    background: 4,
+    health: 350,
     nextAttack: (i, history) => {
         if(i === 0) {
             return ATTACKS.scratch;

@@ -27,7 +27,7 @@ const ATTACKS = {
 const Spider = {
     texture: 'spider',
     background: 1,
-    health: 750,
+    health: 250,
     nextAttack: (i, history) => {
         if(i === 0) {
             return ATTACKS.web;

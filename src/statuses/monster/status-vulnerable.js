@@ -1,6 +1,7 @@
 const StatusVulnerable = {
     color: 0xff3f3f,
     intent: 12,
+    priority: 2,
     apply: () => {
         return new Vulnerable();
     }

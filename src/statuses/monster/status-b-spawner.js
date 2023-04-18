@@ -1,6 +1,9 @@
+import StatusTarget from "../combs/status-target.js";
+
 const StatusBSpawner = {
     color: 0x3fafff,
-    intent: 11,
+    intent: 20,
+    priority: 0,
     apply: () => {
         return new BSpawner();
     }
@@ -8,10 +11,12 @@ const StatusBSpawner = {
 
 class BSpawner {
 
-    onCombSpawned = (comb) => {
-        console.log('spawned', comb);
-        if(Math.random() < 0.1) {
+    onCombSpawned = (comb, messenger) => {
+        if(Math.random() < 0.1 && comb.letter !== '*') {
             comb.letter = 'B';
+        }
+        if(comb.letter === 'B') {
+            messenger.applyStatusToComb(comb, StatusTarget);
         }
     }
 

@@ -49,7 +49,7 @@ class WordEval {
         }
         const totalDamage = { value: damage * multiplier.value };
         this._messenger.triggerFlowerDamageCalculation(totalDamage, this._boardSystem.chain.length);
-        this._messenger.dealDamageToMonster(totalDamage.value);
+        this._messenger.dealDamageToMonster(totalDamage.value, this._boardSystem.chain.length);
         this._messenger.triggerMonsterAttacked();
         this._messenger.triggerCombsOnAccept(this._boardSystem.chain, multiplier.value);
         this._boardSystem.deselectAll();

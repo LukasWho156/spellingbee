@@ -26,9 +26,9 @@ const ATTACKS = {
 
 const Dragonfly = {
     texture: 'dragonfly',
-    background: 4,
+    background: 3,
     flying: true,
-    health: 600,
+    health: 300,
     nextAttack: (i, history) => {
         if(i === 0) {
             return ATTACKS.whirl;

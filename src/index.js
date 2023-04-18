@@ -34,6 +34,21 @@ import texButterfly from './assets/gfx/butterfly.png';
 import texDragonfly from './assets/gfx/dragonfly.png';
 import texBacteria from './assets/gfx/bacteria.png';
 import texBeeEater from './assets/gfx/beeeater.png';
+import texWasp from './assets/gfx/wasp.png';
+import texHornet from './assets/gfx/hornet.png';
+import texJunebug from './assets/gfx/junebug.png';
+import texVarroa from './assets/gfx/varroa.png';
+import texVenus from './assets/gfx/venus.png';
+import texBear from './assets/gfx/bear.png';
+import texCentipede from './assets/gfx/centipede.png';
+import texCockroach from './assets/gfx/cockroach.png';
+import texBombadeerBeetle from './assets/gfx/bombadierbeetle.png';
+import texMosquito from './assets/gfx/mosquito.png';
+import texAnt from './assets/gfx/ant.png';
+import texCarp from './assets/gfx/carp.png';
+import texToad from './assets/gfx/toad.png';
+import texWaterskipper from './assets/gfx/waterskipper.png';
+import texHedgehog from './assets/gfx/hedgehog.png';
 
 import texBackgrounds from './assets/gfx/backgrounds.png';
 
@@ -59,10 +74,10 @@ async function main() {
     connectWS();
 
     //debug: monitor memory
-    const monitor = monitorMemory();
-    if(monitor) {
-        setInterval(() => console.log('Memory usage:', monitor.getMemory()), 3000)
-    }
+    //const monitor = monitorMemory();
+    //if(monitor) {
+    //    setInterval(() => console.log('Memory usage:', monitor.getMemory()), 3000)
+    //}
 
     Game.init(config);
 
@@ -82,9 +97,9 @@ async function main() {
     const promises = [
         Game.loadTexture(texHoneycomb, 'honeycomb'),
         Game.loadTexture(texShadow, 'shadow'),
-        Game.loadTexture(texCombIcons, 'combIcons', { framesX: 4, framesY: 4 }),
-        Game.loadTexture(texParticles, 'particles'),
-        Game.loadTexture(texIntents, 'intents', { framesX: 4, framesY: 4 }),
+        Game.loadTexture(texCombIcons, 'combIcons', { framesX: 4, framesY: 5 }),
+        Game.loadTexture(texParticles, 'particles', { framesX: 4, framesY: 3 }),
+        Game.loadTexture(texIntents, 'intents', { framesX: 4, framesY: 7 }),
         Game.loadTexture(texHealthbar, 'healthbar'),
         Game.loadTexture(texHoneyBar, 'honeyBar'),
         Game.loadTexture(texRing, 'ring'),
@@ -102,6 +117,21 @@ async function main() {
         Game.loadTexture(texDragonfly, 'dragonfly'),
         Game.loadTexture(texBacteria, 'bacteria'),
         Game.loadTexture(texBeeEater, 'beeEater'),
+        Game.loadTexture(texWasp, 'wasp'),
+        Game.loadTexture(texHornet, 'hornet'),
+        Game.loadTexture(texJunebug, 'junebug'),
+        Game.loadTexture(texVarroa, 'varroa'),
+        Game.loadTexture(texVenus, 'venus'),
+        Game.loadTexture(texBear, 'bear'),
+        Game.loadTexture(texCentipede, 'centipede'),
+        Game.loadTexture(texCockroach, 'cockroach'),
+        Game.loadTexture(texBombadeerBeetle, 'bombadeerBeetle'),
+        Game.loadTexture(texMosquito, 'mosquito'),
+        Game.loadTexture(texAnt, 'fireant'),
+        Game.loadTexture(texCarp, 'carp'),
+        Game.loadTexture(texToad, 'toad'),
+        Game.loadTexture(texWaterskipper, 'waterskipper'),
+        Game.loadTexture(texHedgehog, 'hedgehog'),
         Game.loadTexture(texBackgrounds, 'backgrounds', { framesX: 4, framesY: 2 }),
         Game.loadTexture(texFlowers, 'flowers', { framesX: 4, framesY: 3 }),
         Game.loadTexture(texBeehiveBackground, 'beehiveBackground'),

@@ -41,7 +41,7 @@ class MonsterSystem {
         this._statusSystem = new MonsterStatusSystem(messenger);
         
         this._messenger = messenger;
-        this._messenger.dealDamageToMonster = (damage) => this.dealDamage(damage);
+        this._messenger.dealDamageToMonster = (damage, wordLength) => this.dealDamage(damage, wordLength);
         this._messenger.getCurrentMonster = () => this._currentMonster;
         this._messenger.healMonster = (amount) => this.heal(amount);
     }
@@ -123,9 +123,10 @@ class MonsterSystem {
         this._startAttack();
     }
 
-    dealDamage = (damage) => {
+    dealDamage = (damage, wordLength) => {
+        console.log('deal damage', damage, wordLength);
         if(!this._currentMonster) return;
-        damage = this._messenger.calculateMonsterDamage(damage);
+        damage = this._messenger.calculateMonsterDamage(damage, wordLength);
         damage = Math.floor(damage);
         this._currentMonster.health -= damage;
         if(this._currentMonster.health < 0) {

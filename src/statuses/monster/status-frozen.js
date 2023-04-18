@@ -1,6 +1,7 @@
 const StatusFrozen = {
     color: 0x3fafff,
     intent: 5,
+    priority: 2,
     apply: () => {
         return new Frozen();
     }

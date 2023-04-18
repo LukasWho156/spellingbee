@@ -40,7 +40,7 @@ const campaignFlowerScreen = (player, flower, parent) => {
     screen.addSystem(mis);
     pauseMenu(mainScene, mainScene, mis).then(pm => screen.addSystem(pm));
 
-    const particleSystem = new ParticleSystem(mainScene, 'particles', 4, 2);
+    const particleSystem = new ParticleSystem(mainScene, 'particles', 4, 3);
     screen.addSystem(particleSystem);
 
     let chosen = false;

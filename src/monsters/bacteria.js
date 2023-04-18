@@ -27,8 +27,8 @@ const ATTACKS = {
 
 const Bacteria = {
     texture: 'bacteria',
-    background: 1,
-    health: 800,
+    background: 4,
+    health: 700,
     nextAttack: (i, history, messenger) => {
         const chance = 1 - messenger.countStatuses(StatusInfected) * 0.2;
         if(Math.random() < chance) {

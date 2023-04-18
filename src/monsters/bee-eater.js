@@ -1,3 +1,4 @@
+import StatusTarget from "../statuses/combs/status-target.js";
 import StatusBSpawner from "../statuses/monster/status-b-spawner.js";
 import StatusStrength from "../statuses/monster/status-strength.js";
 
@@ -17,7 +18,7 @@ const ATTACKS = {
         windupTime: 5000,
         color: 0x3f7fff,
         action: (messenger) => {
-            const bs = messenger.getLetteredCombs('B');
+            const bs = messenger.getAffectedCombs(StatusTarget);
             for(const comb of bs) {
                 comb.state = 'rotten';
                 messenger.healMonster(15);
@@ -48,8 +49,7 @@ const BeeEater = {
         if(history[history.length - 1] === 'eat') {
             return ATTACKS.simple;
         }
-        const bs = messenger.getLetteredCombs('B');
-        if(bs.length > 0) {
+        if(messenger.countStatuses(StatusTarget) > 0) {
             return ATTACKS.eat;
         }
         return ATTACKS.simple;

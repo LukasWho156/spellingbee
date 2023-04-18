@@ -1,7 +1,8 @@
 const StatusStrength = {
-    id: 'spiky',
+    id: 'strength',
     color: 0xff3f3f,
     intent: 13,
+    priority: 1,
     apply: () => {
         return new Strength();
     }

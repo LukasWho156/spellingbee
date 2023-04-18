@@ -19,6 +19,7 @@ class MonsterStatusSystem {
         this._statuses = [];
         this._messenger = messenger;
         this._gaugeGroup = new THREE.Group();
+        messenger.getStatusStacks = (status) => this.getStacks(status);
         messenger.applyStatusToMonster = (status, time, stacks) => this.applyStatus(status, time, stacks);
         messenger.calculateMonsterDamage = (damage, wordLength) => {
             return this._statuses.reduce((prev, status) => status.component.onDamageCalculation(prev, wordLength), damage);
@@ -38,6 +39,15 @@ class MonsterStatusSystem {
                 status.component.onCombSpawned(comb);
             });    
         }
+    }
+
+    getStacks = (status) => {
+        if(!this._messenger.getCurrentMonster()) {
+            return 0;
+        }
+        const existing = this._statuses.find(s => s.status === status);
+        console.log(existing, existing?.component.stacks);
+        return existing?.component.stacks ?? 0;
     }
 
     applyStatus = (status, time, stacks) => {
@@ -82,6 +92,7 @@ class MonsterStatusSystem {
             gauge.add(stackLabel);
         } 
         this._statuses.push({status: status, component: component, gauge: gauge, stackLabel: stackLabel});
+        this._statuses.sort((a, b) => a.status.priority - b.status.priority);
         this._repositionGauges();
     }
 

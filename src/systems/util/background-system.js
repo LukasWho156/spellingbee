@@ -32,7 +32,8 @@ const backgroundSystem = (scene, currentBackground) => {
             bg2.material.opacity = 0;
             bg2.setFrame(newBackground);
             currentBackground = newBackground;
-        }
+        },
+        sprite: () => bg2,
     };
 
 }

@@ -1,4 +1,4 @@
-import { THREE } from "luthe-amp";
+import { Game, THREE } from "luthe-amp";
 import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
 
 const StatusFire = {
@@ -84,6 +84,7 @@ class Fire {
 
     onAccept = (messenger) => {
         messenger.dealDamageToPlayer(5, true);
+        Game.audio.playSound('sfxMonsterAttack');
     }
 
 }

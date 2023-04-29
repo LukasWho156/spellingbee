@@ -77,6 +77,7 @@ class Bomb {
             messenger.dealDamageToPlayer(10, true);
             messenger.removeStatusFromComb(this._comb, StatusBomb);
             this._comb.state = 'rotten';
+            Game.audio.playSound('sfxExplosion');
         }
     }
 

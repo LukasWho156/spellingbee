@@ -2,6 +2,7 @@ import { THREE, GameScreen, Game } from "luthe-amp"
 import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
 import { createOrthoCam } from "luthe-amp/lib/util/create-ortho-cam";
 import { MouseInteractionSystem } from "luthe-amp/lib/input/mouse-interaction-system";
+import { MouseInteractionComponent } from "luthe-amp/lib/input/mouse-interaction-component";
 
 import { CombButton, TextButton } from "../util/button.js";
 import WORLDS from "../worlds.js";
@@ -10,6 +11,7 @@ import campaignWorldScreen from "./campaign-world-screen.js";
 import SlideSystem from "../systems/util/slide-system.js";
 import { renderH2, renderWhiteText } from "../util/text-util.js";
 import backgroundSystem from "../systems/util/background-system.js";
+import SwipeHandler from "../util/swipe-handler.js";
 
 const worldSelectionScreen = () => {
 
@@ -129,6 +131,17 @@ const worldSelectionScreen = () => {
 
     const mis = new MouseInteractionSystem(Game.width, Game.height, mainCamera, Game.renderer.domElement);
     screen.addSystem(mis);
+
+    const bgInteraction = new MouseInteractionComponent({}, bgSys.sprite());
+    mis.add(bgInteraction);
+    const swipeHandler = new SwipeHandler(bgInteraction);
+    swipeHandler.addEventListener('swipe', (event) => {
+        if(event.detail.direction === 'left') {
+            nextWorld();
+        } else {
+            prevWorld();
+        }
+    })
 
     const startButton = TextButton('selectionScreen_startGame');
     startButton.sprite.position.y = -325;

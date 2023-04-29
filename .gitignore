@@ -1,6 +1,8 @@
 node_modules
 dist/*
 dev/*
+promo
+builds
 
 !dist/index.html
 !dist/styles.css

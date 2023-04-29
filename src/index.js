@@ -24,6 +24,7 @@ import texHoneyBar from './assets/gfx/honey-bar.png';
 import texRing from './assets/gfx/ring.png';
 import texButton from './assets/gfx/button.png';
 import texCombButton from './assets/gfx/comb_button.png';
+import texBook from './assets/gfx/book.png';
 
 import texBee from './assets/gfx/bee.png';
 import texHurtBee from './assets/gfx/hurtbee.png';
@@ -54,6 +55,7 @@ import texWaterskipper from './assets/gfx/waterskipper.png';
 import texHedgehog from './assets/gfx/hedgehog.png';
 
 import texBackgrounds from './assets/gfx/backgrounds.png';
+import texTutorial from './assets/gfx/tutorial.png';
 
 import texFlowers from './assets/gfx/flowers.png';
 
@@ -84,12 +86,14 @@ import sfxBonusDamage from './assets/sfx/bonusDamage.mp3';
 import sfxBuzz from './assets/sfx/buzz.mp3';
 import sfxClick from './assets/sfx/click.mp3';
 import sfxDebuff from './assets/sfx/debuff.mp3';
+import sfxExplosion from './assets/sfx/explosion.mp3';
 import sfxFlower from './assets/sfx/flower.mp3';
 import sfxFreeze from './assets/sfx/freeze.mp3';
 import sfxHealing from './assets/sfx/healing.mp3';
 import sfxMonsterAttack from './assets/sfx/monsterattack.mp3';
 import sfxPop from './assets/sfx/pop.mp3';
 import sfxShield from './assets/sfx/shield.mp3';
+import sfxSnap from './assets/sfx/snap.mp3';
 
 import sfxWinningShort from './assets/sfx/winning_short.mp3';
 import sfxWinningLong from './assets/sfx/winning_long.mp3';
@@ -146,6 +150,7 @@ async function main() {
         Game.loadTexture(texRing, 'ring'),
         Game.loadTexture(texButton, 'button', { framesY: 2 }),
         Game.loadTexture(texCombButton, 'combButton', { framesY: 2 }),
+        Game.loadTexture(texBook, 'book'),
         Game.loadTexture(texBee, 'bee', { framesX: 2 }),
         Game.loadTexture(texHurtBee, 'hurtbee'),
         Game.loadTexture(texStagBeetle, 'stagBeetle'),
@@ -181,6 +186,7 @@ async function main() {
         Game.loadTexture(texTitle, 'title'),
         Game.loadTexture(texDifficulty, 'difficulty'),
         Game.loadTexture(texPopup, 'popup'),
+        Game.loadTexture(texTutorial, 'tutorial'),
 
         loadDictionary('de').then(dict => Game.dictionaries.de = dict),
         loadDictionary('en').then(dict => Game.dictionaries.en = dict),
@@ -210,6 +216,7 @@ async function main() {
         Game.loadSound(sfxBuzz, { id: 'sfxBuzz' }),
         Game.loadSound(sfxClick, { id: 'sfxClick' }),
         Game.loadSound(sfxDebuff, { id: 'sfxDebuff' }),
+        Game.loadSound(sfxExplosion, { id: 'sfxExplosion' }),
         Game.loadSound(sfxFlower, { id: 'sfxFlower' }),
         Game.loadSound(sfxFreeze, { id: 'sfxFreeze' }),
         Game.loadSound(sfxHealing, { id: 'sfxHealing' }),
@@ -217,6 +224,7 @@ async function main() {
         Game.loadSound(sfxPop, { id: 'sfxPop' }),
         Game.loadSound(sfxPop, { id: 'sfxPop2' }),
         Game.loadSound(sfxShield, { id: 'sfxShield' }),
+        Game.loadSound(sfxSnap, { id: 'sfxSnap' }),
 
         Game.loadSound(sfxWinningLong, { id: 'sfxWinningLong' }),
         Game.loadSound(sfxWinningShort, { id: 'sfxWinningShort' }),

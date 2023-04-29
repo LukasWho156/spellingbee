@@ -1,5 +1,6 @@
 import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
 import StatusStrength from "../monster/status-strength.js";
+import { Game } from "luthe-amp";
 
 const StatusTrapped = {
     apply: (comb, sprite) => {
@@ -42,6 +43,7 @@ class Trapped {
     onAccept = (messenger) => {
         messenger.dealDamageToPlayer(15, true);
         messenger.applyStatusToMonster(StatusStrength, -1, 2);
+        Game.audio.playSound('sfxSnap');
     }
 
 }

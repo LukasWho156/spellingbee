@@ -50,8 +50,10 @@ const createInfoPopup = async (scene, headingKey, infoKey, sprite, frame, mis, m
     mis.add(bdInteraction);
 
     await menu.addHeading(headingKey);
-    const infoSprite = menu.addSprite(sprite, 0.5);
-    infoSprite.setFrame(frame);
+    if(sprite) {
+        const infoSprite = menu.addSprite(sprite, 0.5);
+        infoSprite.setFrame(frame);
+    }
     await (replacements ? menu.addTextBlock(infoKey, ...replacements) : menu.addTextBlock(infoKey));
     
     const resumeButton = menu.addButton('info_close');

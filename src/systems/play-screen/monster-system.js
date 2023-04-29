@@ -99,7 +99,6 @@ class MonsterSystem {
         this._intent.setFrame(this._currentAttack.intent);
         if(!this._popups[this._currentAttack.id]) {
             createAttackPopup(this._scene, this._currentAttack, this._mis, this._messenger).then(popup => {
-                console.log(popup);
                 this._popups[this._currentAttack.id] = popup;
             })
         }

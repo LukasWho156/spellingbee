@@ -80,12 +80,15 @@ const makeTouchSystem = (screen, camera, boardSystem, evaluator, beehive, messen
 
     const interaction = new MouseInteractionComponent({cursor: 'default'}, trailMesh);
     interaction.addEventListener('dragstart', (event) => {
+        if(!event.detail.isPrimary) return;
         _handleTouch(event.detail.x, event.detail.y);
     });
     interaction.addEventListener('dragmove', (event) => {
+        if(!event.detail.isPrimary) return;
         _handleTouch(event.detail.x, event.detail.y);
     });
     interaction.addEventListener('dragend', (event) => {
+        if(!event.detail.isPrimary) return;
         if(!pointer.down) return
         pointer.down = false;
         evaluator.evaluateWord();

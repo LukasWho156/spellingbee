@@ -2,6 +2,7 @@ import { THREE, Game, GameScreen } from "luthe-amp";
 import { createOrthoCam } from "luthe-amp/lib/util/create-ortho-cam";
 import { MouseInteractionSystem } from "luthe-amp/lib/input/mouse-interaction-system";
 import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+import { MouseInteractionComponent } from "luthe-amp/lib/input/mouse-interaction-component";
 
 import { TextButton } from "../util/button.js";
 import endlessPlayScreen from "./endless-play-screen.js";
@@ -12,6 +13,11 @@ import campaignWorldScreen from "./campaign-world-screen.js";
 import ALL_MONSTERS from "../monsters/monsters.js";
 import SettingsPopup from "../systems/util/settings-popup.js";
 import BopComponent from "../systems/play-screen/bop-component.js";
+import tutorialScreen from "./tutorial-screen.js";
+import compendiumScreen from "./compendium-screen.js";
+import { Text } from "troika-three-text";
+
+const VERSION = "v. 1.0.0";
 
 const mainMenuScreen = () => {
 
@@ -56,12 +62,22 @@ const mainMenuScreen = () => {
         bopOffset: 0,
         size: 1,
     }, titleSprite);
-    
+
+    const titleInteraction = new MouseInteractionComponent({}, titleSprite);
+    titleInteraction.addEventListener('click', (event) => {
+        const uv = event.detail.intersection.uv;
+        if(uv.x > 0.7 && uv.y < 0.4) {
+            console.log('buzz');
+            Game.audio.playSound('sfxBuzz');
+        }
+    })
+    mis.add(titleInteraction);
 
     const bottomGroup = new THREE.Group();
+    bottomGroup.position.x = -50;
     bottomGroup.position.y = -600;
     slideSystem.add(bottomGroup, {
-        inY: 0,
+        inY: 150,
         outY: -600,
     });
     mainScene.add(bottomGroup);
@@ -91,8 +107,16 @@ const mainMenuScreen = () => {
         slideSystem.triggerSlideout(() => Game.setActiveScreen(endlessPlayScreen(unlockedMonsters)));
     });
 
+    const tutorialButton = TextButton('mainMenu_tutorial');
+    tutorialButton.sprite.position.y = -500;
+    bottomGroup.add(tutorialButton.sprite);
+    tutorialButton.addToSystem(mis);
+    tutorialButton.addEventListener('click', () => {
+        slideSystem.triggerSlideout(() => Game.setActiveScreen(tutorialScreen()));
+    });
+
     const settingsButton = TextButton('mainMenu_settings');
-    settingsButton.sprite.position.y = -500;
+    settingsButton.sprite.position.y = -650;
     bottomGroup.add(settingsButton.sprite);
     settingsButton.addToSystem(mis);
 
@@ -111,10 +135,34 @@ const mainMenuScreen = () => {
         });
     });
 
+    const compendium = compendiumScreen();
+    const compendiumSprite = new Sprite2D({
+        texture: 'book',
+        x: 270,
+        y: 650,
+        scaleX: 0.4,
+        scaleY: 0.4,
+    });
+    bottomGroup.add(compendiumSprite);
+    const compendiumInteraction = new MouseInteractionComponent({cursor: 'pointer'}, compendiumSprite);
+    mis.add(compendiumInteraction)
+    compendiumInteraction.addEventListener('click', () => Game.setActiveScreen(compendium));
+
     screen.setFromBackground = (bg) => {
         bgSys.setBackground(bg);
         bgSys.setBackground(0);
     }
+
+    const versionText = new Text();
+    versionText.fontSize = 24;
+    versionText.anchorX = 'right';
+    versionText.anchorY = 'bottom';
+    versionText.text = VERSION;
+    versionText.font = Game.blockFont;
+    versionText.color = 0x000000;
+    versionText.sync();
+    versionText.position.set(290, -600, 0);
+    mainScene.add(versionText);
 
     screen.addSystem({mount: () => {
         Game.audio.playMusic('musicMainMenu');
@@ -132,7 +180,7 @@ const mainMenuScreen = () => {
         }
     }, update: (delta, globalTime) => {
         titleBop.update(delta, globalTime);
-    }})
+    }});
 
     return screen;
 

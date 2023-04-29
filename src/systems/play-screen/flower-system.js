@@ -26,7 +26,6 @@ const FlowerSystem = (scene, top, flowers, mis, messenger) => {
         sprite.setFrame(flower.frame);
         top.add(sprite);
         createFlowerPopup(scene, flower, mis, messenger).then(infoBox => {
-            console.log(infoBox);
             const interaction = new MouseInteractionComponent({cursor: 'pointer'}, sprite);
             interaction.addEventListener('click', () => infoBox.open());
             mis.add(interaction);

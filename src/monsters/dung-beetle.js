@@ -3,6 +3,7 @@ import { getLetterFreqs } from "../language/get-random-letter.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 5000,
         color: 0xffaf3f,
@@ -12,6 +13,7 @@ const ATTACKS = {
     },
     dung: {
         id: 'dung',
+        replacements: [1],
         intent: 2,
         windupTime: 5000,
         color: 0x6f5f00,

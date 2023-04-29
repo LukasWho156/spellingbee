@@ -4,8 +4,9 @@ import StatusTapped from "../statuses/combs/status-tapped.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
-        windupTime: 6000,
+        windupTime: 5000,
         color: 0xffaf3f,
         action: (messenger) => {
             messenger.dealDamageToPlayer(5);
@@ -13,8 +14,9 @@ const ATTACKS = {
     },
     suck: {
         id: 'suck',
+        replacements: [2],
         intent: 6,
-        windupTime: 6000,
+        windupTime: 5000,
         color: 0xaf3f3f,
         action: (messenger) => {
             const combs = messenger.getRandomCombs(2);
@@ -28,7 +30,7 @@ const ATTACKS = {
 
 const Mosquito = {
     texture: 'mosquito',
-    background: 3,
+    background: 4,
     health: 300,
     nextAttack: (i, history) => {
         if(i === 0) {

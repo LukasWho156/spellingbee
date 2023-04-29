@@ -19,7 +19,6 @@ class BST {
         const rightList = list.slice(index + 1);
         if(leftList.length > 0) this.left = new BST(leftList);
         if(rightList.length > 0) this.right = new BST(rightList);
-        //console.log("bst", this.value, leftList.length, rightList.length);
     }
 
     find(value) {

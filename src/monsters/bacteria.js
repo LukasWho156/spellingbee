@@ -2,7 +2,7 @@ import StatusInfected from "../statuses/combs/status-infected.js";
 
 const ATTACKS = {
     attack: {
-        id: 'attack',
+        id: 'attackInfected',
         intent: 10,
         windupTime: 5000,
         color: 0x3fff3f,
@@ -13,6 +13,7 @@ const ATTACKS = {
     },
     infect: {
         id: 'infect',
+        replacements: [3],
         intent: 9,
         windupTime: 5000,
         color: 0x3fff7f,
@@ -27,7 +28,7 @@ const ATTACKS = {
 
 const Bacteria = {
     texture: 'bacteria',
-    background: 4,
+    background: 5,
     health: 700,
     nextAttack: (i, history, messenger) => {
         const chance = 1 - messenger.countStatuses(StatusInfected) * 0.2;

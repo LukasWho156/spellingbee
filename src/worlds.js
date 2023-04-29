@@ -27,36 +27,42 @@ import Waterskipper from "./monsters/waterskipper.js";
 const WORLDS = [
     {
         titleKey: 'world_sky',
+        music: 'musicSkyWorld',
         difficulty: 1,
         background: 0,
         monsters: [Wasp, Butterfly, Junebug, Hornet, BeeEater],
     },
     {
         titleKey: 'world_meadow',
+        music: 'musicMeadowWorld',
         difficulty: 2,
         background: 1,
         monsters: [Spider, Varroa, Centipede, Hedgehog, Beekeeper],
     },
     {
         titleKey: 'world_woods',
+        music: 'musicWoodWorld',
         difficulty: 2,
         background: 2,
         monsters: [FireAnt, StagBeetle, BombadeerBeetle, DungBeetle, Bear],
     },
     {
         titleKey: 'world_pond',
+        music: 'musicWaterWorld',
         difficulty: 3,
         background: 4,
         monsters: [Dragonfly, Waterskipper, Mosquito, Carp, Toad],
     },
     {
         titleKey: 'world_street',
+        music: 'musicStreetWorld',
         difficulty: 4,
         background: 5,
         monsters: [Cockroach, Cat, Venus, Rat, Bacteria],
     },
     {
         titleKey: 'world_bossrush',
+        music: 'musicBossrushWorld',
         difficulty: 5,
         background: 6,
         monsters: [BeeEater, Beekeeper, Bear, Toad, Bacteria],

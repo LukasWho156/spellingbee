@@ -3,6 +3,7 @@ import StatusDiluted from "../statuses/combs/status-diluted.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 5000,
         color: 0xffaf3f,
@@ -12,11 +13,12 @@ const ATTACKS = {
     },
     dilute: {
         id: 'dilute',
-        intent: 3,
+        replacements: [4],
+        intent: 28,
         windupTime: 5000,
-        color: 0xff3f3f,
+        color: 0x7fcfff,
         action: (messenger) => {
-            const combs = messenger.getRandomCombs(3);
+            const combs = messenger.getRandomCombs(4);
             for(const comb of combs) {
                 messenger.applyStatusToComb(comb, StatusDiluted);
             }

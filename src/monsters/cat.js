@@ -3,20 +3,22 @@ import StatusScratched from "../statuses/combs/status-scratched.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [7],
         intent: 0,
         windupTime: 5000,
         color: 0xffaf3f,
         action: (messenger) => {
-            messenger.dealDamageToPlayer(5);
+            messenger.dealDamageToPlayer(7);
         }
     },
     scratch: {
         id: 'scratch',
+        replacements: [4, 3],
         intent: 3,
         windupTime: 5000,
         color: 0xff3f3f,
         action: (messenger) => {
-            messenger.dealDamageToPlayer(3);
+            messenger.dealDamageToPlayer(4);
             const combs = messenger.getRandomCombs(3);
             for(const comb of combs) {
                 messenger.applyStatusToComb(comb, StatusScratched);
@@ -27,7 +29,7 @@ const ATTACKS = {
 
 const Cat = {
     texture: 'cat',
-    background: 4,
+    background: 5,
     health: 350,
     nextAttack: (i, history) => {
         if(i === 0) {

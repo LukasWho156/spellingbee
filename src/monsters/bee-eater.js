@@ -5,6 +5,7 @@ import StatusStrength from "../statuses/monster/status-strength.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [1],
         intent: 0,
         windupTime: 7500,
         color: 0xffaf3f,
@@ -14,7 +15,8 @@ const ATTACKS = {
     },
     eat: {
         id: 'eat',
-        intent: 11,
+        replacements: [1, 15],
+        intent: 25,
         windupTime: 5000,
         color: 0x3f7fff,
         action: (messenger) => {

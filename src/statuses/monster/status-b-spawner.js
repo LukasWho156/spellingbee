@@ -1,8 +1,9 @@
 import StatusTarget from "../combs/status-target.js";
 
 const StatusBSpawner = {
+    id: 'bSpawner',
     color: 0x3fafff,
-    intent: 20,
+    intent: 11,
     priority: 0,
     apply: () => {
         return new BSpawner();

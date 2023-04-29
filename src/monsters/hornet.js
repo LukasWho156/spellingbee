@@ -3,6 +3,7 @@ import StatusPoisoned from "../statuses/combs/status-poisoned.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 5000,
         color: 0xffaf3f,
@@ -12,7 +13,8 @@ const ATTACKS = {
     },
     sting: {
         id: 'sting',
-        intent: 10,
+        replacements: [1],
+        intent: 26,
         windupTime: 5000,
         color: 0xff3f3f,
         action: (messenger) => {

@@ -5,7 +5,7 @@ import { MouseInteractionSystem } from "luthe-amp/lib/input/mouse-interaction-sy
 
 import { CombButton, TextButton } from "../util/button.js";
 import WORLDS from "../worlds.js";
-import localize from "../language/localize.js";
+import { localize } from "../language/localize.js";
 import campaignWorldScreen from "./campaign-world-screen.js";
 import SlideSystem from "../systems/util/slide-system.js";
 import { renderH2, renderWhiteText } from "../util/text-util.js";
@@ -67,6 +67,26 @@ const worldSelectionScreen = () => {
     difficultyGroup.position.set(0, 390, 5);
     topGroup.add(difficultyGroup);
 
+    const solvedIcon1 = new Sprite2D({
+        texture: 'combIcons',
+        x: 225,
+        y: -410,
+        scaleX: 0.4,
+        scaleY: 0.4,
+    });
+    solvedIcon1.setFrame(7);
+    topGroup.add(solvedIcon1);
+
+    const solvedIcon2 = new Sprite2D({
+        texture: 'combIcons',
+        x: -225,
+        y: -410,
+        scaleX: 0.4,
+        scaleY: 0.4,
+    });
+    solvedIcon2.setFrame(7);
+    topGroup.add(solvedIcon2);
+
     const createDifficultyRating = () => {
         while(difficultyGroup.children.length > 0) {
             difficultyGroup.remove(difficultyGroup.children[0]);
@@ -90,6 +110,9 @@ const worldSelectionScreen = () => {
         titleText.text = localize(currentWorld.titleKey, Game.settings.uiLanguage);
         titleText.sync();
         createDifficultyRating();
+        if(currentWorld.music) {
+            Game.audio.playMusic(currentWorld.music);
+        }
     }
 
     const nextWorld = () => {
@@ -107,7 +130,7 @@ const worldSelectionScreen = () => {
     const mis = new MouseInteractionSystem(Game.width, Game.height, mainCamera, Game.renderer.domElement);
     screen.addSystem(mis);
 
-    const startButton = TextButton(localize('selectionScreen_startGame', Game.settings.uiLanguage));
+    const startButton = TextButton('selectionScreen_startGame');
     startButton.sprite.position.y = -325;
     bottomGroup.add(startButton.sprite);
     startButton.addToSystem(mis);
@@ -145,9 +168,26 @@ const worldSelectionScreen = () => {
     }});
 
     screen.addSystem({update: () =>  {
+        const solved = Game.saveData.clearedWorlds ? !!Game.saveData.clearedWorlds[currentWorld.titleKey] : false;
+        solvedIcon1.visible = solved;
+        solvedIcon2.visible = solved;
         prevButton.sprite.visible = !(currentWorldIndex === 0);
-        nextButton.sprite.visible = !(currentWorldIndex === WORLDS.length - 1);
+        nextButton.sprite.visible = Game.saveData.finalWorldUnlocked ? 
+            !(currentWorldIndex === WORLDS.length - 1) :
+            currentWorldIndex < WORLDS.length - 2;
+        nextButton.setEnabled(nextButton.sprite.visible);
     }});
+
+    screen.setWorld = (i) => {
+        currentWorldIndex = i;
+        setWorld();
+    };
+
+    screen.relocalize = () => {
+        startButton.relocalize();
+        difficultyText.text = localize('selectionScreen_difficulty', Game.settings.uiLanguage);
+        difficultyText.sync();
+    }
 
     return screen;
 

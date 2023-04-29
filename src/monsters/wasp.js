@@ -1,8 +1,9 @@
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
-        windupTime: 5000,
+        windupTime: 6000,
         color: 0xffaf3f,
         action: (fightSystem) => {
             fightSystem.dealDamageToPlayer(5);

@@ -1,13 +1,15 @@
 import { THREE, Game, SimpleSystem } from "luthe-amp";
 import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
 import { Text } from "troika-three-text";
+import { MouseInteractionComponent } from "luthe-amp/lib/input/mouse-interaction-component";
 
-import createGauge from "../../util/gauge.js";
+import Gauge from "../../util/gauge.js";
 import AttackComponent from "./attack-component.js";
 import BopComponent from "./bop-component.js";
 import DamagedComponent from "./damaged-component.js";
 import GrowthComponent from "./growth-component.js";
 import MonsterStatusSystem from "./monster-status-system.js";
+import createAttackPopup from "../util/attack-popup.js";
 
 const DROP_ACCELERATION = new THREE.Vector3(0, -0.0075, 0);
 
@@ -30,25 +32,31 @@ class MonsterSystem {
     _healthbar;
     _healthText;
 
+    _popups;
+    _mis;
+
     get isAlive() {
         return this._currentMonster?.health > 0;
     }
 
-    constructor(scene, particleSystem, messenger) {
+    constructor(scene, particleSystem, messenger, mis) {
         this._scene = scene;
         this._internalSystem = new SimpleSystem();
         this._particleSystem = particleSystem;
-        this._statusSystem = new MonsterStatusSystem(messenger);
+        this._statusSystem = new MonsterStatusSystem(messenger, scene, mis);
         
         this._messenger = messenger;
         this._messenger.dealDamageToMonster = (damage, wordLength) => this.dealDamage(damage, wordLength);
         this._messenger.getCurrentMonster = () => this._currentMonster;
         this._messenger.healMonster = (amount) => this.heal(amount);
+
+        this._popups = {};
+        this._mis = mis;
     }
 
     mount = () => {
         this._uiGroup = new THREE.Group();
-        this._timerGauge = createGauge('ring', 100, 100, 'ccw');
+        this._timerGauge = new Gauge('ring', 100, 100, 'ccw');
         this._timerGauge.position.set(217, 130);
         this._intent = new Sprite2D({
             texture: Game.getTexture('intents'),
@@ -57,7 +65,7 @@ class MonsterSystem {
         });
         this._timerGauge.add(this._intent);
         this._uiGroup.add(this._timerGauge);
-        this._healthbar = createGauge('healthbar', 400, 40, 'h', [0.01, 0.99]);
+        this._healthbar = new Gauge('healthbar', 400, 40, 'h', [0.01, 0.99]);
         this._healthbar.setValue(1);
         this._healthbar.position.y = 100;
         this._healthbar.position.x = -67;
@@ -73,6 +81,12 @@ class MonsterSystem {
         this._statusSystem.gaugeGroup.position.set(217, 230);
         this._uiGroup.add(this._statusSystem.gaugeGroup);
         this._scene.add(this._uiGroup);
+        const interaction = new MouseInteractionComponent({cursor: 'pointer'}, this._timerGauge);
+        this._mis.add(interaction);
+        interaction.addEventListener('click', () => {
+            if(!this._popups[this._currentAttack?.id]) return;
+            this._popups[this._currentAttack.id].open();
+        })
         //this._spawnMonster(DungBeetle);
     }
 
@@ -83,6 +97,12 @@ class MonsterSystem {
         this._currentMonster.history.push(this._currentAttack.id);
         this._timer = this._currentAttack.windupTime;
         this._intent.setFrame(this._currentAttack.intent);
+        if(!this._popups[this._currentAttack.id]) {
+            createAttackPopup(this._scene, this._currentAttack, this._mis, this._messenger).then(popup => {
+                console.log(popup);
+                this._popups[this._currentAttack.id] = popup;
+            })
+        }
     }
 
     spawnMonster = (monster) => {
@@ -124,10 +144,14 @@ class MonsterSystem {
     }
 
     dealDamage = (damage, wordLength) => {
-        console.log('deal damage', damage, wordLength);
         if(!this._currentMonster) return;
         damage = this._messenger.calculateMonsterDamage(damage, wordLength);
         damage = Math.floor(damage);
+        if(damage > 0) {
+            Game.audio.playSound('sfxAccepted');
+        } else {
+            Game.audio.playSound('sfxShield');
+        }
         this._currentMonster.health -= damage;
         if(this._currentMonster.health < 0) {
             this._currentMonster.health = 0;
@@ -159,8 +183,11 @@ class MonsterSystem {
     }
 
     update = (delta, globalTime) => {
+        for(const sys of Object.values(this._popups)) {
+            sys.update(delta);
+        }
         this._internalSystem.update(delta, globalTime);
-        if(!this._messenger.isPaused()) this._statusSystem.update(delta, globalTime);
+        this._statusSystem.update(delta, globalTime);
         if(this._dropSprite) {
             this._dropSprite.position.add(this._dropVelocity.clone().multiplyScalar(delta));
             //this._dropVelocity.add(DROP_ACCELERATION.clone().multiplyScalar(delta));
@@ -184,6 +211,11 @@ class MonsterSystem {
             if(this._timer < 0) {
                 this._currentMonster.attacked = 1;
                 this._currentAttack.action(this._messenger);
+                if(this._currentAttack.id === 'simple') {
+                    Game.audio.playSound('sfxMonsterAttack');
+                } else {
+                    Game.audio.playSound('sfxDebuff');
+                }
                 this._startAttack();
             }
         }

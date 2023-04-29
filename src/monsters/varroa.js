@@ -3,6 +3,7 @@ import StatusHealOnSpawn from "../statuses/monster/status-heal-on-spawn.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 5000,
         color: 0xffaf3f,

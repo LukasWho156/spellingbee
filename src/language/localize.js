@@ -1,13 +1,13 @@
 import de from './messages.de.json';
 import en from './messages.en.json';
 
-const languages = {
+const LANGUAGES = {
     de: { name: 'Deutsch', translations: de },
     en: { name: 'English', translations: en },
 }
 
 const localize = (key, language, ...replacements) => {
-    let message = languages[language]?.translations[key] ?? languages['en'].translations[key];
+    let message = LANGUAGES[language]?.translations[key] ?? LANGUAGES['en'].translations[key];
     if(!message) {
         return 'Missing key';
     }
@@ -17,4 +17,4 @@ const localize = (key, language, ...replacements) => {
     return message;
 }
 
-export default localize;
+export { LANGUAGES, localize };

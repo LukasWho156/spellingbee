@@ -1,6 +1,7 @@
 const StatusHealOnSpawn = {
-    color: 0x3fff00,
-    intent: 20,
+    id: 'healOnSpawn',
+    color: 0xC96F49,
+    intent: 30,
     priority: 0,
     apply: () => {
         return new HealOnSpawn();

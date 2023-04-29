@@ -28,7 +28,6 @@ const backgroundSystem = (scene, currentBackground) => {
             }
         },
         setBackground: (newBackground, log) => {
-            if(log) console.log('Backgrounds:', currentBackground, newBackground);
             bg1.setFrame(currentBackground);
             bg2.material.opacity = 0;
             bg2.setFrame(newBackground);

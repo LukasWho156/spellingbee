@@ -21,7 +21,7 @@ export default (env, argv) => {
                     use: ['style-loader', 'css-loader'],
                 },
                 {
-                    test: /\.(png|svg|jpg|jpeg|gif|mp3|wav|ogg|ttf)$/i,
+                    test: /\.(png|svg|jpg|jpeg|gif|mp3|wav|ogg|oga|ttf)$/i,
                     type: 'asset/resource',
                 },
                 {

@@ -4,6 +4,7 @@ import StatusStrength from "../statuses/monster/status-strength.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [0],
         intent: 0,
         windupTime: 5000,
         color: 0xffaf3f,
@@ -13,6 +14,7 @@ const ATTACKS = {
     },
     reform: {
         id: 'reform',
+        replacements: [8],
         intent: 15,
         windupTime: 7500,
         color: 0x3f3f3f,

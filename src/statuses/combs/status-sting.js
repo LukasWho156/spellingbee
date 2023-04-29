@@ -1,3 +1,5 @@
+import { Game } from "luthe-amp";
+
 import StatusVulnerable from "../monster/status-vulnerable.js";
 import Buff from "./buff.js";
 
@@ -6,6 +8,7 @@ const STING_TIME = 10_000;
 const StatusSting = {
     apply: (comb, sprite) => {
         return new Buff(comb, sprite, 0x7f0000, 3, (messenger, multiplier) => {
+            Game.audio.playSound('sfxApplyDebuff');
             const time = STING_TIME * multiplier
             messenger.applyStatusToMonster(StatusVulnerable, time);
         });

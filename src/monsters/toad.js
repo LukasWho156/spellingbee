@@ -12,6 +12,7 @@ import StatusTargetBuffs from "../statuses/monster/status-target-buffs.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 5000,
         color: 0xffaf3f,
@@ -20,8 +21,8 @@ const ATTACKS = {
         }
     },
     eat: {
-        id: 'eat',
-        intent: 11,
+        id: 'toadEat',
+        intent: 25,
         windupTime: 2000,
         color: 0x3f7fff,
         action: (messenger) => {
@@ -64,13 +65,13 @@ const ATTACKS = {
 
 const Toad = {
     texture: 'toad',
-    background: 3,
+    background: 4,
     health: 600,
     nextAttack: (i, history, messenger) => {
         if(i === 0) {
             return ATTACKS.targetBuffs;
         }
-        if(history[history.length - 1] === 'eat') {
+        if(history[history.length - 1] === 'toadEat') {
             return ATTACKS.simple;
         }
         if(messenger.countStatuses(StatusTarget) > 0) {

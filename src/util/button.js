@@ -2,6 +2,7 @@ import { THREE, Game } from "luthe-amp";
 import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
 import { MouseInteractionComponent } from "luthe-amp/lib/input/mouse-interaction-component";
 import { Text } from "troika-three-text";
+import { localize } from "../language/localize.js";
 
 class Button extends EventTarget {
 
@@ -9,6 +10,7 @@ class Button extends EventTarget {
     _baseSprite;
     _topSprite;
     _held;
+    _enabled;
 
     get sprite() {
         return this._sprite;
@@ -23,6 +25,7 @@ class Button extends EventTarget {
         top.position.z = 5;
         top.position.y = 5;
         this._sprite.add(top);
+        this._enabled = true;
     }
 
     _accept = () => {
@@ -30,6 +33,8 @@ class Button extends EventTarget {
         this._baseSprite.setFrame(0);
         this._topSprite.position.y = 5;
         this._held = false;
+        if(!this._enabled) return;
+        Game.audio.playSound('sfxClick');
         this.dispatchEvent(new CustomEvent('click'));
     }
 
@@ -52,14 +57,18 @@ class Button extends EventTarget {
         interaction.addEventListener('click', this._accept);
     }
 
+    setEnabled = (enabled) => {
+        this._enabled = enabled;
+    }
+
 }
 
-const TextButton = (text) => {
+const TextButton = (key) => {
     const base = new Sprite2D({
         texture: Game.getTexture('button'),
     });
     const textSprite = new Text();
-    textSprite.text = text;
+    textSprite.text = localize(key, Game.settings.uiLanguage);
     textSprite.font = Game.font;
     textSprite.color = 0x000000;
     textSprite.fontSize = 50;
@@ -68,7 +77,12 @@ const TextButton = (text) => {
     textSprite.outlineColor = 0x000000;
     textSprite.outlineBlur = '2%';
     textSprite.sync();
-    return new Button(base, textSprite);
+    const button = new Button(base, textSprite);
+    button.relocalize = () => {
+        textSprite.text = localize(key, Game.settings.uiLanguage);
+        textSprite.sync();
+    }
+    return button;
 }
 
 const CombButton = (icon) => {

@@ -3,35 +3,53 @@ import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
 import { Text } from "troika-three-text";
 
 import PopupShader from "../shaders/popup-shader.js";
-import localize from "../language/localize.js";
+import { localize } from "../language/localize.js";
 import { TextButton } from "./button.js";
 import { syncText, getTextHeight, renderH2 } from "./text-util.js";
+import ListSelection from "./list-selection.js";
+import Slider from "./slider.js";
 
-const createPopup = (tex, width, texHeight, border, padding, mis) => {
+class Popup {
 
-    const items = [];
+    _items;
+    _tex;
+    _width;
+    _texHeight;
+    _border;
+    _padding;
+    _mis;
 
-    const addItem = (item) => {
-        items.push(item);
+    constructor(tex, width, texHeight, border, padding, mis) {
+        this._items = [];
+        this._tex = tex;
+        this._width = width;
+        this._texHeight = texHeight;
+        this._border = border;
+        this._padding = padding;
+        this._mis = mis;
     }
 
-    const addHeading = async (key) => {
+    _addItem = (item) => {
+        this._items.push(item);
+    }
+
+    addHeading = async (key) => {
         const heading = renderH2(key);
         await syncText(heading);
         heading.position.z = 10;
-        addItem({ sprite: heading, height: 1.2 * getTextHeight(heading) });
+        this._addItem({ sprite: heading, height: 1.2 * getTextHeight(heading), relocalize: () => heading.text = localize(key, Game.settings.uiLanguage) });
         return heading;
     }
 
-    const addSpace = (height) => {
-        addItem({ sprite: new THREE.Object3D(), height: height });
+    addSpace = (height) => {
+        this._addItem({ sprite: new THREE.Object3D(), height: height });
     }
 
-    const addTextBlock = async (key, ...replacements) => {
+    addTextBlock = async (key, ...replacements) => {
         const text = new Text();
         text.text = localize(key, Game.settings.uiLanguage, ...replacements);
         text.textAlign = 'center';
-        text.maxWidth = width - (border + padding) * 2;
+        text.maxWidth = this._width - (this._border + this._padding) * 2;
         text.lineHeight = 1.2;
         text.color = 0x000000,
         text.font = Game.blockFont;
@@ -41,11 +59,11 @@ const createPopup = (tex, width, texHeight, border, padding, mis) => {
         await syncText(text);
         //text.position.x = -width / 2 + (border + padding);
         text.position.z = 10;
-        addItem({ sprite: text, height: getTextHeight(text) + 25 });
+        this._addItem({ sprite: text, height: getTextHeight(text) + 25, relocalize: () => text.text = localize(key, Game.settings.uiLanguage, ...replacements) });
         return text;
     }
 
-    const addSprite = (texture, scale) => {
+    addSprite = (texture, scale) => {
         const sprite = new Sprite2D({
             texture: texture,
             scaleX: scale,
@@ -53,58 +71,70 @@ const createPopup = (tex, width, texHeight, border, padding, mis) => {
             handle: 'top',
             z: 10,
         });
-        addItem({ sprite: sprite, height: sprite.scale.y + 20 });
+        this._addItem({ sprite: sprite, height: sprite.scale.y + 20 });
         return sprite;
     }
 
-    const addButton = (key) => {
-        const button = TextButton(localize(key, Game.settings.uiLanguage));
-        button.addToSystem(mis);
+    addButton = (key) => {
+        const button = TextButton(key);
+        button.addToSystem(this._mis);
         button.sprite.position.z = 10;
-        addItem({ sprite: button.sprite, height: 150 , offsetY: 75});
+        this._addItem({ sprite: button.sprite, height: 150 , offsetY: 75, relocalize: button.relocalize });
         return button;
     }
 
-    const render = () => {
+    addListSelect = async (headingKey, items, defaultItem = 0) => {
+        const select = new ListSelection(headingKey, items, defaultItem);
+        await select.init(this._mis);
+        this._addItem({ sprite: select.group, height: select.height, relocalize: select.relocalize });
+        return select;
+    }
 
-        const contentHeight = items.reduce((prev, item) => prev + item.height, 0);
-        const totalHeight = contentHeight + (border + padding) * 2;
+    addSlider = (initialValue) => {
+        const slider = new Slider(this._mis, 300, 30, initialValue);
+        this._addItem({ sprite: slider.sprite, height: 60, offsetY: 25});
+        return slider;
+    }
 
-        const texture = Game.getTexture(tex).texture;
+    render = () => {
+
+        const contentHeight = this._items.reduce((prev, item) => prev + item.height, 0);
+        const totalHeight = contentHeight + (this._border + this._padding) * 2;
+
+        const texture = Game.getTexture(this._tex).texture;
         texture.minFilter = THREE.LinearFilter;
 
         const mat = new THREE.ShaderMaterial(PopupShader);
         mat.uniforms = {
             current: {value: totalHeight},
-            total: {value: texHeight},
-            border: {value: border},
+            total: {value: this._texHeight},
+            border: {value: this._border},
             map: {value: texture},
         };
         mat.transparent = true;
 
-        const popup = new THREE.Mesh(new THREE.PlaneGeometry(width, totalHeight), mat);
+        const popup = new THREE.Mesh(new THREE.PlaneGeometry(this._width, totalHeight), mat);
 
         let caretY = contentHeight / 2;
 
-        items.forEach(item => {
+        this._items.forEach(item => {
             item.sprite.position.y = caretY - (item.offsetY ?? 0);
             popup.add(item.sprite);
             caretY -= item.height;
         })
 
+        popup.relocalize = () => {
+            for(const item of this._items) {
+                if(typeof(item.relocalize) === 'function') {
+                    item.relocalize();
+                }
+            }
+        }
+
         return popup;
 
     }
 
-    return {
-        addHeading: addHeading,
-        addSpace: addSpace,
-        addSprite: addSprite,
-        addTextBlock: addTextBlock,
-        addButton: addButton,
-        render: render,
-    }
-
 }
 
-export default createPopup;
+export default Popup;

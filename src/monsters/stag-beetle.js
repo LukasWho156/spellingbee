@@ -3,6 +3,7 @@ import StatusSpiky from "../statuses/monster/status-spiky.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 7500,
         color: 0xffaf3f,

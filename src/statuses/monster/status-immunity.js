@@ -1,4 +1,5 @@
 const StatusImmunity = {
+    id: 'immunity',
     color: 0xaf7f00,
     intent: 19,
     priority: 0,

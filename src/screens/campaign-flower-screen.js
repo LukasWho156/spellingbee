@@ -3,17 +3,19 @@ import { createOrthoCam } from "luthe-amp/lib/util/create-ortho-cam";
 import { MouseInteractionSystem } from "luthe-amp/lib/input/mouse-interaction-system";
 import { ParticleSystem } from "luthe-amp/lib/graphics/systems/particle-system";
 import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+import { DisposalSystem } from "luthe-amp/lib/util/disposal-system";
 
-import localize from "../language/localize.js";
+import { localize } from "../language/localize.js";
 import HealthSystem from "../systems/play-screen/health-system.js";
 import backgroundSystem from "../systems/util/background-system.js"
 import pauseMenu from "../systems/util/pause-menu.js";
-import createPopup from "../util/popup.js";
+import Popup from "../util/popup.js";
 import WORLDS from "../worlds.js";
 import FLOWERS from "../flowers/flowers.js";
 import FlowerSystem from "../systems/play-screen/flower-system.js";
+import campaignGameOverScreen from "./campaign-game-over-screen.js";
 
-const HEALING = 100;
+const HEALING = 50;
 
 const campaignFlowerScreen = (player, flower, parent) => {
 
@@ -38,7 +40,11 @@ const campaignFlowerScreen = (player, flower, parent) => {
     screen.addSystem(FlowerSystem(mainScene, mainScene, flowers, mis));
 
     screen.addSystem(mis);
-    pauseMenu(mainScene, mainScene, mis).then(pm => screen.addSystem(pm));
+    pauseMenu(mainScene, mainScene, mis, null, { callback: () => {
+        Game.saveData.currentRun = null;
+        Game.saveToStorage('bee_saveData', Game.saveData);
+        Game.setActiveScreen(campaignGameOverScreen());
+    }}).then(pm => screen.addSystem(pm));
 
     const particleSystem = new ParticleSystem(mainScene, 'particles', 4, 3);
     screen.addSystem(particleSystem);
@@ -56,6 +62,7 @@ const campaignFlowerScreen = (player, flower, parent) => {
         if(chosen) return;
         chosen = true;
         player.flowers.push(newFlower.id);
+        Game.audio.playSound('sfxFlower');
         const sprite = new Sprite2D({
             texture: 'flowers',
             handle: 'top left',
@@ -82,7 +89,7 @@ const campaignFlowerScreen = (player, flower, parent) => {
     }
 
     const flowerPopup = async () => {
-        const popup = createPopup('popup', 559, 1140, 35, 15, mis);
+        const popup = new Popup('popup', 559, 1140, 35, 15, mis);
         await popup.addHeading('flower_heading');
         const sprite = popup.addSprite('flowers', 0.5);
         sprite.setFrame(newFlower.frame);
@@ -120,6 +127,8 @@ const campaignFlowerScreen = (player, flower, parent) => {
             }
         }})
     });
+
+    screen.addSystem(new DisposalSystem(mainScene))
 
     return screen;
 

@@ -1,6 +1,7 @@
 const StatusDefenseUp = {
+    id: 'defenseUp',
     color: 0xff3f3f,
-    intent: 12,
+    intent: 24,
     priority: 2,
     apply: () => {
         return new Vulnerable();

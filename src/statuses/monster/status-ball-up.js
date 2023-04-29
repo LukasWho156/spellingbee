@@ -1,8 +1,9 @@
 import StatusSpiky from "./status-spiky.js";
 
 const StatusBallUp = {
+    id: 'ballUp',
     color: 0xcfaf9f,
-    intent: 20,
+    intent: 29,
     priority: 0,
     apply: () => {
         return new BallUp();

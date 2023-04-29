@@ -1,11 +1,12 @@
 import { THREE, Game, SimpleSystem } from 'luthe-amp';
 import { Sprite2D } from 'luthe-amp/lib/graphics/utility/sprite-2d';
+import { recursiveDispose } from 'luthe-amp/lib/util/disposal-system';
 import { Text } from 'troika-three-text';
 
 import GrowthComponent from './growth-component.js';
 import AgeComponent from './age-component.js';
 import { getRandomLetter } from '../../language/get-random-letter.js';
-import createGauge from '../../util/gauge.js';
+import Gauge from '../../util/gauge.js';
 import getRandomBuff from '../../statuses/combs/get-random-buff.js';
 import HintSystem from './hint-system.js';
 
@@ -265,6 +266,7 @@ class BoardSystem extends EventTarget {
                     }
                     this._popComb(entity, entity.state === 'accepted');
                     this._board.remove(sprite);
+                    recursiveDispose(sprite);
                 }
             }
         })
@@ -273,6 +275,9 @@ class BoardSystem extends EventTarget {
     }
 
     _popComb = (comb, success) => {
+        if(!success) {
+            Game.audio.playSound('sfxPop');
+        }
         comb.state = 'removed';
         if(comb.letter === '*') {
             this._jokerOnBoard = false;
@@ -321,7 +326,7 @@ class BoardSystem extends EventTarget {
     }
 
     mount = () => {
-        this._rerollGauge = createGauge('ring', 450, 450, 'cw');
+        this._rerollGauge = new Gauge('ring', 450, 450, 'cw');
         this._rerollGauge.setColor(0xffaf3f);
         this._rerollGauge.visible = false;
         this._rerollGauge.position.z = 50;

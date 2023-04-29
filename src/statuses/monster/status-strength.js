@@ -21,7 +21,6 @@ class Strength {
     }
 
     onAttackPlayer = (damage) => {
-        console.log(damage);
         damage.value += this._stacks;
     }
 

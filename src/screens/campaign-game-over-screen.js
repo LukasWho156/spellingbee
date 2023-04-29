@@ -1,6 +1,7 @@
 import { THREE, Game, GameScreen } from "luthe-amp";
 import { createOrthoCam } from "luthe-amp/lib/util/create-ortho-cam";
 import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+import { DisposalSystem } from "luthe-amp/lib/util/disposal-system";
 
 import GrowthComponent from "../systems/play-screen/growth-component.js";
 import SlideSystem from "../systems/util/slide-system.js";
@@ -57,7 +58,12 @@ const campaignGameOverScreen = () => {
     encouragement.sync();
     bottom.add(encouragement);
 
-    screen.addSystem({update: (delta) => {
+    let tempVolume = 1;
+
+    screen.addSystem({mount: () => {
+        Game.audio.playMusic('silence');
+        Game.audio.playSound('sfxLosing');
+    }, update: (delta) => {
         growth.update(delta);
         if(slideSystem._state === 'slideout') {
             if(gameOverText.outlineOpacity > 0) {
@@ -75,6 +81,8 @@ const campaignGameOverScreen = () => {
             }
             gameOverText.sync();
         }
+    }, unmount: () => {
+        //Game.audio.musicVolume = tempVolume;
     }});
 
     screen.addListener('click', () => {
@@ -84,6 +92,8 @@ const campaignGameOverScreen = () => {
             Game.setActiveScreen(Game.mainMenu)
         });
     })
+
+    screen.addSystem(new DisposalSystem(mainScene));
 
     return screen;
 

@@ -3,6 +3,7 @@ import StatusSlimed from "../statuses/combs/status-slimed.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 5000,
         color: 0xffaf3f,
@@ -12,6 +13,7 @@ const ATTACKS = {
     },
     sneeze: {
         id: 'sneeze',
+        replacements: [5],
         intent: 8,
         windupTime: 5000,
         color: 0x3fff3f,

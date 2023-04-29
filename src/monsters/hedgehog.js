@@ -3,6 +3,7 @@ import StatusBallUp from "../statuses/monster/status-ball-up.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 6000,
         color: 0xffaf3f,

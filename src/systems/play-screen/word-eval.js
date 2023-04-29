@@ -21,6 +21,7 @@ class WordEval {
         const word = this._boardSystem.selectedWord;
         if(word.length < 3) {
             this._boardSystem.deselectAll();
+            Game.audio.playSound('sfxBadWord');
             return;
         }
         let isValid = false;
@@ -35,6 +36,7 @@ class WordEval {
         }
         if(!isValid) {
             this._boardSystem.deselectAll();
+            Game.audio.playSound('sfxBadWord');
             return;
         }
         this._boardSystem.acceptWord();

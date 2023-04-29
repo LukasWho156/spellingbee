@@ -1,7 +1,7 @@
 const StatusPowerUp = {
     id: 'powerUp',
-    color: 0x00afaf,
-    intent: 13,
+    color: 0xaf00af,
+    intent: 23,
     priority: 2,
     apply: () => {
         return new PowerUp();

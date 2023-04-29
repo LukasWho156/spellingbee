@@ -2,11 +2,12 @@ import { THREE, Game } from "luthe-amp";
 import { MouseInteractionComponent } from "luthe-amp/lib/input/mouse-interaction-component";
 import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
 
-import createPopup from "../../util/popup.js";
+import Popup from "../../util/popup.js";
+import addSoundControls from "./add-sound-controls.js";
 
 const GROWTH_RATE = 0.005;
 
-const pauseMenu = async (scene, top, mis, messenger, giveUp) => {
+const pauseMenu = async (scene, top, mis, messenger, giveUp, mainMenu = true) => {
 
     let state = 'closed';
     let scale = 0;
@@ -36,6 +37,7 @@ const pauseMenu = async (scene, top, mis, messenger, giveUp) => {
 
     const interaction = new MouseInteractionComponent({cursor: 'pointer'}, menuButton);
     interaction.addEventListener('click', () => {
+        Game.audio.playSound('sfxClick');
         if(state !== 'closed') return;
         if(messenger) {
             if(messenger.isPaused()) return;
@@ -46,7 +48,7 @@ const pauseMenu = async (scene, top, mis, messenger, giveUp) => {
     });
     mis.add(interaction);
 
-    const menu = createPopup('popup', 559, 1140, 35, 15, mis);
+    const menu = new Popup('popup', 559, 1140, 35, 15, mis);
 
     const close = () => {
         backdrop.material.opacity = 0;
@@ -63,13 +65,16 @@ const pauseMenu = async (scene, top, mis, messenger, giveUp) => {
 
     await menu.addHeading('pauseMenu_heading');
     menu.addSpace(25);
+
+    addSoundControls(menu);
+    menu.addSpace(25);
     
     const resumeButton = menu.addButton('pauseMenu_resume');
     resumeButton.addEventListener('click', close);
 
     if(giveUp) {
 
-        const confirmDialog = createPopup('popup', 559, 1140, 35, 15, mis);
+        const confirmDialog = new Popup('popup', 559, 1140, 35, 15, mis);
         await confirmDialog.addHeading('abortConfirm_heading');
         confirmDialog.addSpace(25);
         await confirmDialog.addTextBlock('abortConfirm_description');
@@ -102,13 +107,13 @@ const pauseMenu = async (scene, top, mis, messenger, giveUp) => {
         const giveUpButton = menu.addButton('pauseMenu_abort');
         giveUpButton.addEventListener('click', () => rendererdDialog.scale.set(1, 1, 1));
 
-    } else {
+    }
 
+    if(mainMenu) {
         const mainMenuButton = menu.addButton('pauseMenu_mainMenu');
         mainMenuButton.addEventListener('click', () => {
             Game.setActiveScreen(Game.mainMenu);
-        })
-
+        });
     }
 
     renderedMenu = menu.render();

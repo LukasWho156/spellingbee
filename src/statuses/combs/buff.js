@@ -39,10 +39,8 @@ class Buff {
     }
 
     onAccept = (messenger, multiplier) => {
-        console.log(multiplier);
         const effectiveMultiplier = { value: multiplier };
         messenger.triggerFlowerBuffEffectivity(effectiveMultiplier);
-        console.log(effectiveMultiplier);
         this._onAccept(messenger, effectiveMultiplier.value);
     }
 

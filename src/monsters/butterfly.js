@@ -3,6 +3,7 @@ import StatusTapped from "../statuses/combs/status-tapped.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 6000,
         color: 0xffaf3f,
@@ -12,6 +13,7 @@ const ATTACKS = {
     },
     tap: {
         id: 'tap',
+        replacements: [1],
         intent: 6,
         windupTime: 6000,
         color: 0x3faf3f,

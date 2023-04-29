@@ -1,6 +1,6 @@
 import { THREE, Game } from "luthe-amp";
 import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
-import createGauge from "../../util/gauge.js";
+import Gauge from "../../util/gauge.js";
 
 const BOMB_TIME = 10_000;
 
@@ -27,7 +27,7 @@ class Bomb {
             z: 2,
         });
         this._dynamiteSprite.setFrame(17);
-        this._countdownGauge = createGauge('ring', 1, 1, 'ccw');
+        this._countdownGauge = new Gauge('ring', 1, 1, 'ccw');
         this._countdownGauge.position.z = 1;
         this._countdownGauge.scale.set(0.9, 0.9, 1);
         this._rotation = 0;

@@ -4,7 +4,7 @@ const Cornflower = {
     frame: 8,
 
     onBuffEffectivity: (effectivity) => {
-        effectivity.value *= 1.2;
+        effectivity.value *= 1.1;
     }
 
 }

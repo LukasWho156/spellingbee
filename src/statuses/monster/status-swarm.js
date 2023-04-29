@@ -2,7 +2,7 @@ import StatusStrength from "./status-strength.js";
 
 const StatusSwarm = {
     id: 'swarm',
-    color: 0x3f3f3f,
+    color: 0xbf6f4f,
     intent: 15,
     priority: 0,
     apply: () => {

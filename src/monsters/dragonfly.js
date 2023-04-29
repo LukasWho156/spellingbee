@@ -3,8 +3,9 @@ import StatusWhirled from "../statuses/combs/status-whirled.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
-        windupTime: 5000,
+        windupTime: 4000,
         color: 0xffaf3f,
         action: (messenger) => {
             messenger.dealDamageToPlayer(5);
@@ -12,6 +13,7 @@ const ATTACKS = {
     },
     whirl: {
         id: 'whirl',
+        replacements: [3],
         intent: 7,
         windupTime: 4000,
         color: 0x3f7faf,
@@ -26,7 +28,7 @@ const ATTACKS = {
 
 const Dragonfly = {
     texture: 'dragonfly',
-    background: 3,
+    background: 4,
     flying: true,
     health: 300,
     nextAttack: (i, history) => {

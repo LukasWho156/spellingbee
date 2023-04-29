@@ -14,8 +14,9 @@ const BUFFS = [
 ]
 
 const StatusTargetBuffs = {
+    id: 'targetBuffs',
     color: 0x3fafff,
-    intent: 20,
+    intent: 21,
     priority: 0,
     apply: () => {
         return new TargetBuffs();

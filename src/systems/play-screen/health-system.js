@@ -1,6 +1,6 @@
 import { Game } from "luthe-amp";
 import { Text } from "troika-three-text";
-import createGauge from "../../util/gauge.js";
+import Gauge from "../../util/gauge.js";
 
 const DECAY_RATE = 0.02;
 
@@ -27,7 +27,7 @@ class HealthSystem {
         this._bloodIntensity = 0;
         if(messenger) {
             messenger.dealDamageToPlayer = (damage, piercing) => this.dealDamage(damage, piercing);
-            messenger.healPlayer = (healthAmount) => this.heal(healthAmount);
+            messenger.healPlayer = (healthAmount) => this.heal(Math.ceil(healthAmount));
             this._messenger = messenger;
         }
     }
@@ -48,6 +48,7 @@ class HealthSystem {
     heal = (healthAmount) => {
         this._health += healthAmount;
         if(this._health > this._maxHealth) this._health = this._maxHealth;
+        Game.audio.playSound('sfxHealing');
         this._updateHealthBar();
     }
 
@@ -58,7 +59,7 @@ class HealthSystem {
 
     mount = () => {
         if(this._healthbar) return;
-        this._healthbar = createGauge('honeyBar', 520, 96, 'h', [0.015, 0.955]);
+        this._healthbar = new Gauge('honeyBar', 520, 96, 'h', [0.015, 0.955]);
         this._healthbar.setValue(1);
         this._healthbar.position.y = 600 - 96 / 2;
         this._healthbar.position.x = -40;

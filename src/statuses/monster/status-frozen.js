@@ -1,4 +1,5 @@
 const StatusFrozen = {
+    id: 'frozen',
     color: 0x3fafff,
     intent: 5,
     priority: 2,

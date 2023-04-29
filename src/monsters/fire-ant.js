@@ -3,6 +3,7 @@ import StatusFire from "../statuses/combs/status-fire.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 5000,
         color: 0xffaf3f,
@@ -12,9 +13,10 @@ const ATTACKS = {
     },
     burn: {
         id: 'burn',
+        replacements: [3],
         windupTime: 5000,
         color: 0xff3f00,
-        intent: 1,
+        intent: 31,
         action: (messenger) => {
             const combs = messenger.getRandomCombs(3);
             for(const comb of combs) {

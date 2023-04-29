@@ -3,6 +3,7 @@ import StatusBomb from "../statuses/combs/status-bomb.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 5000,
         color: 0xffaf3f,
@@ -12,6 +13,7 @@ const ATTACKS = {
     },
     bomb: {
         id: 'bomb',
+        replacements: [3],
         windupTime: 5000,
         color: 0xff3f3f,
         intent: 17,

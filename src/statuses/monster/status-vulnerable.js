@@ -1,4 +1,5 @@
 const StatusVulnerable = {
+    id: 'vulnerable',
     color: 0xff3f3f,
     intent: 12,
     priority: 2,

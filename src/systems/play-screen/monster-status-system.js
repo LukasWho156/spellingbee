@@ -1,9 +1,12 @@
 import { THREE, Game } from "luthe-amp";
 import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+import { MouseInteractionComponent } from "luthe-amp/lib/input/mouse-interaction-component";
 import { Text } from "troika-three-text";
+import { recursiveDispose } from "luthe-amp/lib/util/disposal-system";
 
 import MonsterStatusComponent from "./monster-status-component.js";
-import createGauge from "../../util/gauge.js";
+import Gauge from "../../util/gauge.js";
+import createStatusPopup from "../util/status-popup.js";
 
 class MonsterStatusSystem {
 
@@ -11,11 +14,18 @@ class MonsterStatusSystem {
     _statuses;
     _gaugeGroup;
 
+    _scene;
+    _mis;
+    _systems;
+
     get gaugeGroup() {
         return this._gaugeGroup;
     }
 
-    constructor(messenger) {
+    constructor(messenger, scene, mis) {
+        this._scene = scene;
+        this._mis = mis;
+        this._systems = [];
         this._statuses = [];
         this._messenger = messenger;
         this._gaugeGroup = new THREE.Group();
@@ -46,7 +56,6 @@ class MonsterStatusSystem {
             return 0;
         }
         const existing = this._statuses.find(s => s.status === status);
-        console.log(existing, existing?.component.stacks);
         return existing?.component.stacks ?? 0;
     }
 
@@ -66,7 +75,7 @@ class MonsterStatusSystem {
         }
         const component = new MonsterStatusComponent(status.apply(), time, this._messenger, stacks);
         component.onApply();
-        const gauge = createGauge('ring', 75, 75, 'ccw');
+        const gauge = new Gauge('ring', 75, 75, 'ccw');
         gauge.setColor(status.color);
         const intent = new Sprite2D({
             texture: Game.getTexture('intents'),
@@ -76,7 +85,7 @@ class MonsterStatusSystem {
         intent.setFrame(status.intent ?? 0)
         gauge.add(intent);
         this._gaugeGroup.add(gauge);
-        let stackLabel =null;
+        let stackLabel = null;
         if(stacks) {
             stackLabel = new Text();
             stackLabel.text = component.stacks;
@@ -91,6 +100,12 @@ class MonsterStatusSystem {
             stackLabel.position.set(20, -45, 5);
             gauge.add(stackLabel);
         } 
+        createStatusPopup(this._scene, status, this._mis, this._messenger).then(popup => {
+            const component = new MouseInteractionComponent({ cursor: 'pointer' }, gauge);
+            component.addEventListener('click', () => popup.open());
+            this._mis.add(component);
+            this._systems.push(popup)
+        }) 
         this._statuses.push({status: status, component: component, gauge: gauge, stackLabel: stackLabel});
         this._statuses.sort((a, b) => a.status.priority - b.status.priority);
         this._repositionGauges();
@@ -98,12 +113,17 @@ class MonsterStatusSystem {
 
     cleanse = () => {
         this._statuses = [];
+        recursiveDispose(this._gaugeGroup);
         while(this._gaugeGroup.children.length) {
             this._gaugeGroup.remove(this._gaugeGroup.children[0]);
         }
     }
 
     update = (delta, globalTime) => {
+        this._systems.forEach(sys => {
+            sys.update(delta);
+        });
+        if(this._messenger.isPaused()) return;
         this._statuses.forEach(status => {
             status.component.update(delta, globalTime);
             status.gauge.setValue(status.component.value);
@@ -111,7 +131,10 @@ class MonsterStatusSystem {
         let reposition = false;
         this._statuses = this._statuses.filter(status => {
             if(status.component.isDead) {
+                status.gauge.scale.set(0, 0, 0);
+                status.gauge.layers.disable(0);
                 this._gaugeGroup.remove(status.gauge);
+                status.gauge.dispose();
                 reposition = true;
                 return false;
             }

@@ -3,6 +3,7 @@ import StatusTrapped from "../statuses/combs/status-trapped.js";
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 5000,
         color: 0xffaf3f,
@@ -12,6 +13,7 @@ const ATTACKS = {
     },
     trap: {
         id: 'trap',
+        replacements: [5],
         intent: 16,
         windupTime: 5000,
         color: 0x3faf3f,
@@ -28,7 +30,7 @@ const ATTACKS = {
 
 const Venus = {
     texture: 'venus',
-    background: 4,
+    background: 5,
     health: 350,
     nextAttack: (i, history) => {
         if(i === 0) {

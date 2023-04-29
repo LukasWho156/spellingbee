@@ -1,6 +1,7 @@
 const ATTACKS = {
     simple: {
         id: 'simple',
+        replacements: [5],
         intent: 0,
         windupTime: 5000,
         color: 0xffaf3f,
@@ -10,11 +11,12 @@ const ATTACKS = {
     },
     mouth: {
         id: 'mouth',
-        intent: 2,
+        replacements: [3],
+        intent: 27,
         windupTime: 5000,
-        color: 0x6f5f00,
+        color: 0xefcf5f,
         action: (fightSystem) => {
-            const combs = fightSystem.getRandomCombs(4);
+            const combs = fightSystem.getRandomCombs(3);
             for(const comb of combs) {
                 comb.state = 'rotten';
                 comb.replacement = 'O';
@@ -26,7 +28,7 @@ const ATTACKS = {
 const Carp = {
     texture: 'carp',
     flying: true,
-    background: 3,
+    background: 4,
     health: 300,
     nextAttack: (i, history) => {
         if(i === 0) {

@@ -1,7 +1,7 @@
 const StatusWeak = {
     id: 'weak',
-    color: 0x00afaf,
-    intent: 13,
+    color: 0xaf00af,
+    intent: 22,
     priority: 2,
     apply: () => {
         return new Weak();

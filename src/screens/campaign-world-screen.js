@@ -19,6 +19,7 @@ import FLOWERS from "../flowers/flowers.js";
 import FlowerSystem from "../systems/play-screen/flower-system.js";
 import drawFromArray from "../util/draw-from-array.js";
 import addWinScreen from "../systems/util/win-screen.js";
+import campaignGameOverScreen from "./campaign-game-over-screen.js";
 
 const SCALE = 0.5;
 
@@ -82,8 +83,19 @@ const campaignWorldScreen = (worldIndex, fromBackground, player) => {
             Game.saveData.clearedWorlds = {};
         }
         Game.saveData.clearedWorlds[world.titleKey] = true;
+        let goToFinalWorld = false;
+        if(Object.entries(Game.saveData.clearedWorlds).length >= 5 && !Game.saveData.finalWorldUnlocked) {
+            Game.saveData.finalWorldUnlocked = true;
+            goToFinalWorld = true;
+        }
         Game.saveToStorage('bee_saveData', Game.saveData);
-        Game.setActiveScreen(Game.mainMenu);
+        if(goToFinalWorld) {
+            const screen = Game.mainMenu.campaignScreen;
+            screen.setWorld(WORLDS.length - 1);
+            Game.setActiveScreen(screen);
+        } else {
+            Game.setActiveScreen(Game.mainMenu);
+        }
     }, signal);
 
     const positions = [];
@@ -176,7 +188,7 @@ const campaignWorldScreen = (worldIndex, fromBackground, player) => {
         size: 0,
     }
     simpleSystem.add(new GrowthComponent(highlightEntity, highlight));
-    simpleSystem.add(new GrowthComponent(highlightEntity, highlight));
+    simpleSystem.add(new ShrinkComponent(highlightEntity, highlight));
 
     let targetPosition = new THREE.Vector3();
     let toTarget = new THREE.Vector3();
@@ -189,7 +201,7 @@ const campaignWorldScreen = (worldIndex, fromBackground, player) => {
             beentity.speed = 0;
             combs.forEach(comb => comb.state = 'shrinking');
             beentity.state = 'shrinking';
-            highlight.state = 'shrinking';
+            highlightEntity.state = 'shrinking';
         }
     }})
 
@@ -220,6 +232,7 @@ const campaignWorldScreen = (worldIndex, fromBackground, player) => {
                 i++;
                 return;
             }
+            Game.audio.playSound(`sfxPop${i % 2 === 0 ? '' : '2'}`);
             for(let j = 0; j < 10; j++) {
                 combSprites[i].userData.decoration.setFrame(7);
                 particleSystem.spawn(0, {
@@ -240,7 +253,9 @@ const campaignWorldScreen = (worldIndex, fromBackground, player) => {
     }
 
     screen.addSystem({mount: () => {
-        console.log(player.progress);
+        if(world.music) {
+            Game.audio.playMusic(world.music, true);
+        }
         Game.saveData.currentRun = player;
         Game.saveToStorage('bee_saveData', Game.saveData);
         healthSystem.setHealth(player.health);
@@ -276,6 +291,17 @@ const campaignWorldScreen = (worldIndex, fromBackground, player) => {
         screen.addSystem(FlowerSystem(mainScene, topGroup, flowers, mis));
 
         if(player.progress === 9) {
+            const tempVolume = Game.audio.musicVolume;
+            Game.audio.musicVolume = 0;
+            const fanfare = Game.audio.playSound('sfxWinningLong');
+            fanfare.element.addEventListener('ended', () => {
+                const fadeIn = (x) => {
+                    if(x > 1) x = 1;
+                    Game.audio.musicVolume = x * tempVolume;
+                    if(x < 1) setTimeout(() => fadeIn(x + 0.05), 50);
+                }
+                fadeIn(0.05);
+            })
             setTimeout(win, 250);
         }
     }, update: () => {
@@ -287,7 +313,11 @@ const campaignWorldScreen = (worldIndex, fromBackground, player) => {
 
     const mis = new MouseInteractionSystem(Game.width, Game.height, mainCamera, Game.renderer.domElement);
     screen.addSystem(mis);
-    pauseMenu(mainScene, topGroup, mis).then(pm => screen.addSystem(pm));
+    pauseMenu(mainScene, topGroup, mis, null, { callback: () => {
+        Game.saveData.currentRun = null;
+        Game.saveToStorage('bee_saveData', Game.saveData);
+        Game.setActiveScreen(campaignGameOverScreen());
+    }}).then(pm => screen.addSystem(pm));
 
     const plane = new THREE.Mesh(
         new THREE.PlaneGeometry(600, 1200),
@@ -297,6 +327,7 @@ const campaignWorldScreen = (worldIndex, fromBackground, player) => {
     const contInteraction = new MouseInteractionComponent({}, plane);
     contInteraction.addEventListener('click', () => {
         if(combs.find(comb => comb.state === 'growing') || player.progress === 9) return;
+        Game.audio.playSound('sfxBuzz');
         beentity.speed = 0.003;
     });
     mis.add(contInteraction);

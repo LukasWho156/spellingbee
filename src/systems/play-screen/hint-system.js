@@ -66,7 +66,6 @@ const HintSystem = (combs, messenger, timerLength) => {
             updateCurrentWord(delta);
         } else {
             timer -= delta;
-            //console.log("timer tick", timer)
             if(timer < 0 && hints.length > 0) {
                 currentWord = hints[Math.floor(Math.random() * hints.length)];
             }

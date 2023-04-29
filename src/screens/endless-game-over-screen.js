@@ -1,6 +1,7 @@
 import { THREE, Game, GameScreen } from "luthe-amp";
 import { createOrthoCam } from "luthe-amp/lib/util/create-ortho-cam";
 import { Sprite2D } from "luthe-amp/lib/graphics/utility/sprite-2d";
+import { DisposalSystem } from "luthe-amp/lib/util/disposal-system";
 
 import GrowthComponent from "../systems/play-screen/growth-component.js";
 import SlideSystem from "../systems/util/slide-system.js";
@@ -71,7 +72,9 @@ const endlessGameOverScreen = (defeated) => {
         Game.saveToStorage('bee_saveData', Game.saveData);
     }
 
-    screen.addSystem({update: (delta) => {
+    screen.addSystem({mount: () => {
+        Game.audio.playMusic('sfxLosing');
+    }, update: (delta) => {
         growth.update(delta);
         if(slideSystem._state === 'slideout') {
             if(gameOverText.outlineOpacity > 0) {
@@ -98,6 +101,8 @@ const endlessGameOverScreen = (defeated) => {
             Game.setActiveScreen(Game.mainMenu)
         });
     })
+
+    screen.addSystem(new DisposalSystem(mainScene));
 
     return screen;
 

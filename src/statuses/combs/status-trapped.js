@@ -40,8 +40,8 @@ class Trapped {
     }
 
     onAccept = (messenger) => {
-        messenger.dealDamageToPlayer(10, true);
-        messenger.applyStatusToMonster(StatusStrength, -1, 1);
+        messenger.dealDamageToPlayer(15, true);
+        messenger.applyStatusToMonster(StatusStrength, -1, 2);
     }
 
 }

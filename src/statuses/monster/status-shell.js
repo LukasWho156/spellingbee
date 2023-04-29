@@ -1,4 +1,5 @@
 const StatusShell = {
+    id: 'shell',
     color: 0x9f5f3f,
     intent: 18,
     priority: 0,
